@@ -1,1 +1,1 @@
-# everydaypaper
+# Everydaypaper
