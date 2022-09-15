@@ -1,19 +1,19 @@
 [
   
     {
-      "title"    : "测试一下",
-      "subtitle" : " &quot;Hello World, Hello Blog&quot;",
-      "tags"     : "Deep Learning",
-      "url"      : "/2022/09/14/test/",
-      "date"     : "2022-09-14 08:00:00 -0400"
+      "title"    : "Prototypical Contrastive Learning of unsupervised representations",
+      "subtitle" : "无监督表征的原型对比学习",
+      "tags"     : "对比学习, 度量学习",
+      "url"      : "/2022/09/11/pcl/",
+      "date"     : "2022-09-11 08:00:00 -0400"
     } ,
   
     {
       "title"    : "E(n) Equivariant Graph Neural Networks",
       "subtitle" : "E(n) 等变图神经网络",
       "tags"     : "等变图神经网络",
-      "url"      : "/2022/09/14/EquivariantGraphNeuralNetworks/",
-      "date"     : "2022-09-14 08:00:00 -0400"
+      "url"      : "/2022/09/09/EquivariantGraphNeuralNetworks/",
+      "date"     : "2022-09-09 08:00:00 -0400"
     } 
   
 ]

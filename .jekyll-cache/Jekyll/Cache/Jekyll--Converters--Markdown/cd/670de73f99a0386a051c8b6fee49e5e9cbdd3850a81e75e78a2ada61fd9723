@@ -1,6 +1,4 @@
-I"�%<h1 id="prototypical-contrastive-learning-of-unsupervised-representations">Prototypical Contrastive Learning of unsupervised representations</h1>
-
-<p>ICLR 2021</p>
+I".%<p>ICLR 2021</p>
 
 <p>这篇文章提出了Prototypical Contrastive Learning （PCL），这是一种无监督的表示学习算法，将对比学习和聚类联系在一起。</p>
 
@@ -17,7 +15,7 @@
 
 \[\theta^*=\underset{\theta}{\arg \max } \sum_{i=1}^n \log p\left(x_i ; \theta\right)\]
 
-<p>假设观测到的数据集是 $\left\lbrace x_i\right\rbrace_{i=1}^n$，对应的原型（prototype）是隐变量 $C=\left\lbrace c_i\right\rbrace_{i=1}^k$ ，则代入$C$上式化为：</p>
+<p>假设观测到的数据集是 $\left\lbrace x_i\right\rbrace_{i=1}^n$， 对应的原型（prototype）是隐变量 $C=\left\lbrace c_i\right\rbrace_{i=1}^k$ ，则代入$C$上式化为：</p>
 
 \[\theta^*=\underset{\theta}{\arg \max } \sum_{i=1}^n \log p\left(x_i ; \theta\right)=\underset{\theta}{\arg \max } \sum_{i=1}^n \log \sum_{c_i \in C} p\left(x_i, c_i ; \theta\right)\]
 
@@ -80,7 +78,7 @@ Const=\sum_{c_i \in C}p\left(x_i, c_i ; \theta\right)\]
 
 \[\mathcal{L}_{\text {ProtoNCE }}=\sum_{i=1}^n-\left(\log \frac{\exp \left(v_i \cdot v_i^{\prime} / \tau\right)}{\sum_{j=0}^r \exp \left(v_i \cdot v_j^{\prime} / \tau\right)}+\frac{1}{M} \sum_{m=1}^M \log \frac{\exp \left(v_i \cdot c_s^m / \phi_s^m\right)}{\sum_{j=0}^r \exp \left(v_i \cdot c_j^m / \phi_j^m\right)}\right)\]
 
-<p>损失函数的第一项作者把InfoNCE加入了进来，这里$v_i^\prime$是和$v_i$属于相同簇的增广样本，$r$是负样本的数量。总共进行$M$次聚类，每次的类簇数都不一样$K=\left\lbrace k_m\right\rbrace_{m=1}^M$。通过这种方式可以提升原型的概率估计的鲁棒性，并能编码分层的结构。</p>
+<p>损失函数的第一项作者把InfoNCE加入了进来，这里$v_i’$是和$v_i$属于相同簇的增广样本，$r$是负样本的数量。总共进行$M$次聚类，每次的类簇数都不一样$K=\left\lbrace k_m\right\rbrace_{m=1}^M$。通过这种方式可以提升原型的概率估计的鲁棒性，并能编码分层的结构。</p>
 
 <p>$\phi$表示样本点的集中程度，使用同一簇的动量特征$\left\lbrace v_z^{\prime}\right\rbrace_{z=1}^Z$估计$\phi$。$\phi$越小，表明聚集程度越大。对于较小的$\phi$，应该满足：</p>
 

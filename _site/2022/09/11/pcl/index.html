@@ -12,26 +12,28 @@
 
     <!-- Open Graph -->
     <meta property="og:title"
-        content="E(n) Equivariant Graph Neural Networks - EverydayPaper">
+        content="Prototypical Contrastive Learning of unsupervised representations - Everyday Paper">
     
     <meta property="og:type" content="article">
-    <meta property="og:description" content="这篇文章提出一种对平移，旋转，反射和排列等变的图神经网络 E(n)-Equivariant Graph Neural Networks
+    <meta property="og:description" content="ICLR 2021
 ">
     
-    <meta property="article:published_time" content=" 2022-09-14T08:00:00Z">
+    <meta property="article:published_time" content=" 2022-09-11T08:00:00Z">
     
     
     <meta property="article:author" content="Chthub">
     
     
-    <meta property="article:tag" content="等变图神经网络">
+    <meta property="article:tag" content="对比学习">
+    
+    <meta property="article:tag" content="度量学习">
     
     
     <meta property="og:image" content="http://localhost:4000https://avatars.akamai.steamstatic.com/9945406f240ea1a932bb64e71240e7cc0188d0c6_full.jpg">
-    <meta property="og:url" content="http://localhost:4000/2022/09/14/EquivariantGraphNeuralNetworks/">
-    <meta property="og:site_name" content="EverydayPaper">
+    <meta property="og:url" content="http://localhost:4000/2022/09/11/pcl/">
+    <meta property="og:site_name" content="Everyday Paper">
 
-    <title>E(n) Equivariant Graph Neural Networks - EverydayPaper</title>
+    <title>Prototypical Contrastive Learning of unsupervised representations - Everyday Paper</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -40,7 +42,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/2022/09/14/EquivariantGraphNeuralNetworks/">
+    <link rel="canonical" href="http://localhost:4000/2022/09/11/pcl/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href=" /css/bootstrap.min.css">
@@ -87,7 +89,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">EverydayPaper</a>
+                <a class="navbar-brand" href="/">Everyday Paper</a>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -206,7 +208,7 @@
 
     <!-- Image to hack wechat -->
 <!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
-<!-- <img src="/imgs/image-20220909134601099.png" width="0" height="0"> -->
+<!-- <img src="/img/home-bg.jpg" width="0" height="0"> -->
 
 <!-- Post Header -->
 
@@ -215,7 +217,7 @@
 <style type="text/css">
     header.intro-header{
         position: relative;
-        background-image: url('/imgs/image-20220909134601099.png');
+        background-image: url('/img/home-bg.jpg');
         background: ;
     }
 
@@ -235,13 +237,15 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/archive/?tag=%E7%AD%89%E5%8F%98%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C" title="等变图神经网络">等变图神经网络</a>
+                        <a class="tag" href="/archive/?tag=%E5%AF%B9%E6%AF%94%E5%AD%A6%E4%B9%A0" title="对比学习">对比学习</a>
+                        
+                        <a class="tag" href="/archive/?tag=%E5%BA%A6%E9%87%8F%E5%AD%A6%E4%B9%A0" title="度量学习">度量学习</a>
                         
                     </div>
-                    <h1>E(n) Equivariant Graph Neural Networks</h1>
+                    <h1>Prototypical Contrastive Learning of unsupervised representations</h1>
                     
-                    <h2 class="subheading">E(n) 等变图神经网络</h2>
-                    <span class="meta">Posted by Chthub on September 14, 2022</span>
+                    <h2 class="subheading">无监督表征的原型对比学习</h2>
+                    <span class="meta">Posted by Chthub on September 11, 2022</span>
                 </div>
             </div>
         </div>
@@ -268,96 +272,146 @@
                 <!-- Multi-Lingual -->
                 
 
-				<p>这篇文章提出一种对平移，旋转，反射和排列等变的图神经网络 E(n)-Equivariant Graph Neural Networks</p>
+				<p>ICLR 2021</p>
+
+<p>这篇文章提出了Prototypical Contrastive Learning （PCL），这是一种无监督的表示学习算法，将对比学习和聚类联系在一起。</p>
+
+<p>作者认为instance-wise contrastive learning存在两个问题：</p>
+
+<ol>
+  <li>实例之间的判别只利用到了低价的图像之间的差异，而没有考虑到高阶的语义关系</li>
+  <li>只要求正负样本远离，没有考虑到负样本内部的相似性。不可避免地会有负样本对具有相似的语义，本应在表征空间中相距更近，但被对比损失拉远了。这是一种class collision问题。</li>
+</ol>
 
 <h2 id="formulation">Formulation</h2>
 
-<p>几何等变的图神经网络和一般的图神经网络的区别在于几何等变图神经网络在消息传递的过程中考虑到了空间坐标信息，同时要保持坐标信息对于空间变换的等变性。</p>
+<p>最终的目标是找到能使观察到的$n$个样本的对数似然最大化的参数$\theta$：</p>
 
-<p><img src="https://raw.githubusercontent.com/chthub/everydaypaper/main/imgs/image-20220909134601099.png" alt="image-20220909134601099" style="zoom: 50%;" /></p>
+\[\theta^*=\underset{\theta}{\arg \max } \sum_{i=1}^n \log p\left(x_i ; \theta\right)\]
 
-<p>在这张图里面，对原图（左上角）进行旋转，节点的embedding没有发生变化，但是坐标的embedding变了。同时分别对原图和旋转之后的图消息传递之后得到的新的坐标的embedding来说，也存在一个等价的旋转变换。所以这里的等变性是一种约束，约束坐标的embedding不能随意改变，坐标的embedding要满足这种空间上的等变性。换句话说，我们希望学到的这种坐标的embedding确实是代表了空间位置信息，而不是其他的含义。此外，对于节点自身的embedding来说，它也能在更新的时候加入空间信息，使得节点的embedding更能具有空间上的唯一性，这一点在后面在自编码器的例子上的核心想法。</p>
+<p>假设观测到的数据集是 $\left\lbrace x_i\right\rbrace_{i=1}^n$， 对应的原型（prototype）是隐变量 $C=\left\lbrace c_i\right\rbrace_{i=1}^k$ ，则代入$C$上式化为：</p>
 
-<p>给定图 $\mathcal{G}=(\mathcal{V}, \mathcal{E})$，节点 $v_i \in \mathcal{V}$，边 $e_{i j} \in \mathcal{E}$，图卷积的消息传递过程如下：
-\(\begin{aligned}
-\mathbf{m}_{i j} &amp;=\phi_e\left(\mathbf{h}_i^l, \mathbf{h}_j^l, a_{i j}\right) \\
-\mathbf{m}_i &amp;=\sum_{j \in \mathcal{N}(i)} \mathbf{m}_{i j} \\
-\mathbf{h}_i^{l+1} &amp;=\phi_h\left(\mathbf{h}_i^l, \mathbf{m}_i\right)
-\end{aligned}\)
-这里 $\mathbf{h}<em>i^l \in \mathbb{R}^{nf}$ 是节点 $v_i$ 在 $l$ 层的embedding，$a</em>{i j}$ 表示边的属性，$\mathcal{N}(i)$ 是 $v_i$ 的邻居节点的集合。</p>
+\[\theta^*=\underset{\theta}{\arg \max } \sum_{i=1}^n \log p\left(x_i ; \theta\right)=\underset{\theta}{\arg \max } \sum_{i=1}^n \log \sum_{c_i \in C} p\left(x_i, c_i ; \theta\right)\]
 
-<p>本文中提出的Equivariant Graph Convolutional Layer (EGCL)的消息传递过程如下：
-\(\begin{aligned}
-\mathbf{h}^{l+1}, \mathbf{x}^{l+1}&amp;=\operatorname{EGCL}\left[\mathbf{h}^l, \mathbf{x}^l, \mathcal{E}\right]\\
-\mathbf{m}_{i j} &amp;=\phi_e\left(\mathbf{h}_i^l, \mathbf{h}_j^l,\left\|\mathbf{x}_i^l-\mathbf{x}_j^l\right\|^2, a_{i j}\right) \\
-\mathbf{x}_i^{l+1} &amp;=\mathbf{x}_i^l+C \sum_{j \neq i}\left(\mathbf{x}_i^l-\mathbf{x}_j^l\right) \phi_x\left(\mathbf{m}_{i j}\right),\; C=\frac{1}{|\mathcal{V}|-1} \\
-\mathbf{m}_i &amp;=\sum_{j \neq i} \mathbf{m}_{i j} \\
-\mathbf{h}_i^{l+1} &amp;=\phi_h\left(\mathbf{h}_i^l, \mathbf{m}_i\right)
-\end{aligned}\)
-这里的$\mathbf{x}_i^l$表示节点$v_i$在$l$层的坐标的embedding。区别在于等变的GNN里面的$\mathbf{m}$引入了坐标信息，这里的坐标的embedding也是在每层都会更新。</p>
+<p>现在还是很难优化，利用Jensen’s inequality，最大化上式可以转化为最大化上式的下界：</p>
 
-<p>这里有一个细节是$\mathbf{x}_i^{l+1}$的计算时考虑到了除$v_i$之外的所有其他节点，而不只是$v_i$的邻居。同时$\mathbf{m}$在聚集的时候也是在整个图上聚集而不是局限在邻居节点。</p>
+\[\begin{align}
+\sum_{c_i \in C} Q\left(c_i\right)&amp;=1 \\
+\sum_{i=1}^n \log \sum_{c_i \in C} p\left(x_i, c_i ; \theta\right) &amp;=\sum_{i=1}^n \log \sum_{c_i \in C} Q\left(c_i\right) \frac{p\left(x_i, c_i ; \theta\right)}{Q\left(c_i\right)}\\
+&amp; \geq \sum_{i=1}^n \sum_{c_i \in C} Q\left(c_i\right) \log \frac{p\left(x_i, c_i ; \theta\right)}{Q\left(c_i\right)}\\
+&amp;=\sum_{i=1}^n \sum_{c_i \in C} Q\left(c_i\right) \log p\left(x_i, c_i ; \theta\right)-\underbrace{\sum_{i=1}^n \sum_{c_i \in C} Q\left(c_i\right) \log Q\left(c_i\right)}_{\text{constant}}
+\end{align}\]
 
-<p>此外，在消息传递的时候还可以把节点的速度考虑进去，初始速度是$\mathbf{v}_i^{\text{init}}$：
-\(\begin{aligned}
-\mathbf{h}^{l+1}, \mathbf{x}^{l+1}, \mathbf{v}^{l+1}&amp;=\operatorname{EGCL}\left[\mathbf{h}^l, \mathbf{x}^l, \mathbf{v}^{\text {init }}, \mathcal{E}\right]\\
-&amp;\mathbf{v}_i^{l+1}=\phi_v\left(\mathbf{h}_i^l\right) \mathbf{v}_i^{\text {init }}+C \sum_{j \neq i}\left(\mathbf{x}_i^l-\mathbf{x}_j^l\right) \phi_x\left(\mathbf{m}_{i j}\right) \\
-&amp;\mathbf{x}_i^{l+1}=\mathbf{x}_i^l+\mathbf{v}_i^{l+1}
-\end{aligned}\)
-注意到如果$\mathbf{v}_i^{\text{init}}=0$，那么这个式子和前面没有速度项的消息传递一样。</p>
+<p>由于第二项为常数，所以只要最大化第一项就行了：</p>
 
-<h2 id="链接预测">链接预测</h2>
+\[\theta^*=\underset{\theta}{\arg \max }\sum_{i=1}^n \sum_{c_i \in C} Q\left(c_i\right) \log p\left(x_i, c_i ; \theta\right)\]
 
-<p>文章中的这个模型可以用来做链接预测任务。如果一开始只提供了一个点云或者一个节点集合，此时如果以全连接的方式表示变，这种方法不能scale到节点数量很多的情况。本文提出了一种同时将消息传递和边的构建结合在一起的方法：
-\(\mathbf{m}_i=\sum_{j \in \mathcal{N}(i)} \mathbf{m}_{i j}=\sum_{j \neq i} e_{i j} \mathbf{m}_{i j}\\
-e_{i j} \approx \phi_{i n f}\left(\mathbf{m}_{i j}\right),\; \phi_{i n f}: \mathbb{R}^{n f} \rightarrow[0,1]^1\)
-$\phi_{i n f}$就是一个带有sigmoid函数的线性层，对连边进行概率估计。</p>
+<p>当$\frac{p\left(x_i, c_i ; \theta\right)}{Q\left(c_i\right)}$为常数时等号成立，有：</p>
 
-<h2 id="n-body-system">N-body system</h2>
+\[Q\left(c_i\right)=\frac{p\left(x_i, c_i ; \theta\right)}{Const}\\
+\sum_{c_i \in C}Q\left(c_i\right)=1=\frac{1}{Const}\sum_{c_i \in C}p\left(x_i, c_i ; \theta\right)\\
+Const=\sum_{c_i \in C}p\left(x_i, c_i ; \theta\right)\]
 
-<p>给定N个带点粒子，已知初始的电荷量，位置和速度，预测1000个时间戳后的位置。回归问题</p>
+<p>所以此时代入$Const$可以发现$Q(c_i)$就是在$x_i$条件下的后验概率$p(c_i;x_i,\theta)$：</p>
 
-<h2 id="图自编码器">图自编码器</h2>
+\[Q\left(c_i\right)=\frac{p\left(x_i, c_i ; \theta\right)}{\sum_{c_i \in C} p\left(x_i, c_i ; \theta\right)}=\frac{p\left(x_i, c_i ; \theta\right)}{p\left(x_i ; \theta\right)}=p\left(c_i ; x_i, \theta\right)\]
 
-<p>图自编码器的解码器计算邻接矩阵出了直接内积恢复之外，还可以这样定义：
-\(\hat{A}_{i j}=g_e\left(\mathbf{z}_i, \mathbf{z}_j\right)=\frac{1}{1+\exp \left(w\left\|\mathbf{z}_i-\mathbf{z}_j\right\|^2+b\right)}\)
-直接内积的方式适合图变分自编码器，这种方式对GAE和VGAE都挺合适的。</p>
+<p>然后使用EM算法求解。</p>
 
-<p>然后是一个一般的图神经网络无法处理的一种情况：</p>
+<p>在E-step，估计$Q(c_i)$也即$p\left(c_i ; x_i, \theta\right)$。对特征$v_i^{\prime}=f_{\theta^{\prime}}\left(x_i\right)$ 使用 $k$-means 聚类形成$k$个簇，这里的$f_{\theta’}$是动量编码器。原型$c_i$定义为第$i$个簇的簇心。$Q(c_i)$定义如下：</p>
 
-<p><img src="https://raw.githubusercontent.com/chthub/everydaypaper/main/imgs/image-20220909142349775.png" alt="image-20220909142349775" style="zoom:50%;" /></p>
+\[Q(c_i)=p\left(c_i ; x_i, \theta\right)=\mathbb{1}\left(x_i \in c_i\right)=\left\lbrace 
+\begin{aligned}
+1, x_i\in c_i\\
+0, x_i \notin c_i
+\end{aligned}
+\right.\]
 
-<p>对于这种4个节点连接起来的cycle graph，如果每个节点的embedding都是一样的，那么消息传递之后的节点embedding也是一样的，自编码器就无法重构节点之间的连边。</p>
+<p>在M-step进行最大化：</p>
 
-<p>一种解决方法是在节点的embedding里面加入噪声，在这个例子里对每个节点的embedding加入了从$\mathcal{N}(\mathbf{0}, \sigma \mathbf{I})$中采样的随机噪声。这种方法的缺点是引入了额外的噪声分布，使得模型也不得不去学习这个分布。</p>
+\[\begin{aligned}
+\underset{\theta}{\arg \max }\sum_{i=1}^n \sum_{c_i \in C} Q\left(c_i\right) \log p\left(x_i, c_i ; \theta\right) &amp;=\sum_{i=1}^n \sum_{c_i \in C} p\left(c_i ; x_i, \theta\right) \log p\left(x_i, c_i ; \theta\right) \\
+&amp;=\sum_{i=1}^n \sum_{c_i \in C} \mathbb{1}\left(x_i \in c_i\right) \log p\left(x_i, c_i ; \theta\right)\\
+&amp;=\sum_{i=1}^n \sum_{c_i \in C} \mathbb{1}\left(x_i \in c_i\right) \log p\left(x_i ; c_i, \theta\right) \underbrace{p\left(c_i ; \theta\right)}_{\text{uniform prior}} \\
+&amp;=\sum_{i=1}^n \sum_{c_i \in C} \mathbb{1}\left(x_i \in c_i\right) \log\frac{1}{k} \cdot p\left(x_i ; c_i, \theta\right)
+\end{aligned}\]
 
-<p>另一种方法是在节点的embedding里面加入位置信息。(Paper: on the equivalence between positional node embeddings and structural graph representations)</p>
+<p>假设原型$c_i$周围的样本点服从各向同性的高斯分布（isotropic Gaussian）：</p>
 
-<p>然而在本文中，作者将随机采样的噪声作为位置坐标输入到模型里面，输出的节点embedding用于重构邻接矩阵。</p>
+\[p\left(x_i ; c_i, \theta\right)=\exp \left(\frac{-\left(v_i-c_s\right)^2}{2 \sigma_s^2}\right) / \sum_{j=1}^k \exp \left(\frac{-\left(v_i-c_j\right)^2}{2 \sigma_j^2}\right)\]
 
-<p>实验结果如下，Noise-GNN就是在embedding里面加了随机噪声的GNN模型，右图是尝试过拟合训练集，pe是指训练集图的稀疏程度：</p>
+<p>这里$v_i=f_\theta\left(x_i\right)$ ，$x_i \in c_s$。注意到这里有一个$c_s$和$c_i$之间的差异，因为计算的时候是对所有的样本点和所有原型之间进行计算，所以这里的$c_s$专指$x_i$所属于的那个原型。此外，这里的每一个簇的方差$\sigma_j$也是不同的。这里还有一点需要注意的是$v_i$和距离$v_i$比较远的原型$c_i$之间计算得到的相似性很低，在分母中只占较小的比重，所以这个式子也可以近似看作是只考虑了距离$v_i$最近的几个簇心后的概率分布。</p>
 
-<p><img src="https://raw.githubusercontent.com/chthub/everydaypaper/main/imgs/image-20220909143644002.png" alt="image-20220909143644002" /></p>
+<p>最终化简之后的目标是要最小化下式：</p>
 
-<p>可以看到EGNN的power是比Noise-GNN更强的。</p>
+\[\theta^*=\underset{\theta}{\arg \min } \sum_{i=1}^n-\log \frac{\exp \left(v_i \cdot c_s / \phi_s\right)}{\sum_{j=1}^k \exp \left(v_i \cdot c_j / \phi_j\right)}\]
 
-<p>还有一个实验是两个数据集上embedding维度的影响：</p>
+<p>这里$\phi \propto \sigma^2$表示样本点在原型周围分布的聚集程度。注意到最终的优化目标和InfoNCE相似，所以说InfoNCE也可以解释成一种极大似然估计的特殊情况。</p>
 
-<p><img src="https://raw.githubusercontent.com/chthub/everydaypaper/main/imgs/image-20220909144035900.png" alt="image-20220909144035900" /></p>
+<p>最终的损失函数定义如下：</p>
 
-<p>还是维度越高，结果越好。</p>
+\[\mathcal{L}_{\text {ProtoNCE }}=\sum_{i=1}^n-\left(\log \frac{\exp \left(v_i \cdot v_i^{\prime} / \tau\right)}{\sum_{j=0}^r \exp \left(v_i \cdot v_j^{\prime} / \tau\right)}+\frac{1}{M} \sum_{m=1}^M \log \frac{\exp \left(v_i \cdot c_s^m / \phi_s^m\right)}{\sum_{j=0}^r \exp \left(v_i \cdot c_j^m / \phi_j^m\right)}\right)\]
+
+<p>损失函数的第一项作者把InfoNCE加入了进来，这里$v_i’$是和$v_i$属于相同簇的增广样本，$r$是负样本的数量。总共进行$M$次聚类，每次的类簇数都不一样$K=\left\lbrace k_m\right\rbrace_{m=1}^M$。通过这种方式可以提升原型的概率估计的鲁棒性，并能编码分层的结构。</p>
+
+<p>$\phi$表示样本点的集中程度，使用同一簇的动量特征$\left\lbrace v_z^{\prime}\right\rbrace_{z=1}^Z$估计$\phi$。$\phi$越小，表明聚集程度越大。对于较小的$\phi$，应该满足：</p>
+
+<ol>
+  <li>$v’_z$和$c$之间的平均距离小</li>
+  <li>簇包含的特征点多（$Z$比较大）</li>
+</ol>
+
+<p>所以，定义如下：</p>
+
+\[\phi=\frac{\sum_{z=1}^Z\left\|v_z^{\prime}-c\right\|_2}{Z \log (Z+\alpha)}\]
+
+<p>$\alpha$是平滑系数，确保$\phi$不会太大。$\tau$通过在原型集合$C^m$上对$\phi$归一化并取均值得到。</p>
+
+<p>对于松散的簇（$\phi$较大）来说，ProtoNCE会拉近样本embedding和原型之间距离。对于紧凑的簇（$\phi$较小）来说，ProtoNCE更少地使样本的embedding接近原型。所以ProtoNCE将会产生更加平衡的簇，且簇的聚集程度都较为相似。这还阻止了所有embedding都坍塌到同一个簇的这种平凡解（DeepCluster里面通过数据重采样解决了这个问题）。如下图所示，引入对聚集程度的估计使得簇的大小分布更为集中，固定的聚集程度的簇的大小更分散。</p>
+
+<p><img src="https://raw.githubusercontent.com/chthub/everydaypaper/main/imgs/image-20220911003937990.png" alt="image-20220911003937990" style="zoom:50%;" /></p>
+
+<h2 id="互信息分析">互信息分析</h2>
+
+<p>我们已经知道最小化InfoNCE等价于最大化$V$和$V’$之间互信息。相似地，最小化本文提到的ProtoNCE等价于最大化$V$和$\lbrace V’,C^1,\dots,C^M\rbrace$之间的互信息。这带来的优势有两方面：</p>
+
+<ol>
+  <li>
+    <p>这种情况下编码器能够学习到原型之间共享信息，这就忽略了原型内部的噪声，使得这种共享的信息更可能捕获高阶的语义知识。</p>
+  </li>
+  <li>
+    <p>和样本特征相比，原型和类别标签之间的互信息更大。如下图所示，在训练过程中，embedding和类别标签之间的互信息是不断增加的。但是可以看到原型和类别标签之间的互信息是最大的，单纯的样本特征和类别标签的互信息是比较小的。ProtoNCE带来的互信息增益是大于InfoNCE的。这说明原型确实是学到了更丰富的语义。</p>
+
+    <p><img src="https://raw.githubusercontent.com/chthub/everydaypaper/main/imgs/image-20220911005020940.png" alt="image-20220911005020940" style="zoom:50%;" /></p>
+
+    <h2 id="实验">实验</h2>
+
+    <p><img src="https://raw.githubusercontent.com/chthub/everydaypaper/main/imgs/image-20220911010552285.png" alt="image-20220911010552285" style="zoom:50%;" /></p>
+
+    <p>这张图片展示了该算法可以学到不同粒度的高阶语义。这里的不同粒度是由聚类时预先指定的类簇数$k$所决定的，$k$越大，粒度越细，反之粒度则粗。下图中的绿色和黄色也是表示不同的粒度，但具有相似也有差别的语义关系。</p>
+
+    <p><img src="https://raw.githubusercontent.com/chthub/everydaypaper/main/imgs/image-20220911010951177.png" alt="image-20220911010951177" style="zoom:50%;" /></p>
+
+    <p><img src="https://raw.githubusercontent.com/chthub/everydaypaper/main/imgs/image-20220911011019443.png" alt="image-20220911011019443" style="zoom:50%;" /></p>
+
+    <h2 id="伪代码">伪代码</h2>
+
+    <p><img src="https://raw.githubusercontent.com/chthub/everydaypaper/main/imgs/image-20220911005531307.png" alt="image-20220911005531307" /></p>
+  </li>
+</ol>
+
 
 
                 <hr style="visibility: hidden;">
                 <ul class="pager">
                     
-                    
-                    <li class="next">
-                        <a href="/2022/09/14/test/" data-toggle="tooltip" data-placement="top" title="测试一下">
-                        Next<br>
-                        <span>测试一下</span>
+                    <li class="previous">
+                        <a href="/2022/09/09/EquivariantGraphNeuralNetworks/" data-toggle="tooltip" data-placement="top" title="E(n) Equivariant Graph Neural Networks">
+                        Previous<br>
+                        <span>E(n) Equivariant Graph Neural Networks</span>
                         </a>
                     </li>
+                    
                     
                 </ul>
                 <hr style="visibility: hidden;">
@@ -495,9 +549,9 @@ $\phi_{i n f}$就是一个带有sigmoid函数的线性层，对连边进行概�
 <!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = "expufnccheng";
-    var disqus_identifier = "/2022/09/14/EquivariantGraphNeuralNetworks";
-    var disqus_url = "http://localhost:4000/2022/09/14/EquivariantGraphNeuralNetworks/";
+    var disqus_shortname = "everydaypaper";
+    var disqus_identifier = "/2022/09/11/pcl";
+    var disqus_url = "http://localhost:4000/2022/09/11/pcl/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
@@ -577,7 +631,7 @@ $\phi_{i n f}$就是一个带有sigmoid函数的线性层，对连边进行概�
 </ul>
 
                 <p class="copyright text-muted">
-                    Copyright &copy; EverydayPaper 2022
+                    Copyright &copy; Everyday Paper 2022
                     <br>
                     Powered by <a href="https://github.com/chthub/everydaypaper">Everyday Paper</a> |
                     <iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="100px"
