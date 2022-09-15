@@ -5,8 +5,8 @@
     <description>every day paper</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 15 Sep 2022 16:30:15 -0400</pubDate>
-    <lastBuildDate>Thu, 15 Sep 2022 16:30:15 -0400</lastBuildDate>
+    <pubDate>Thu, 15 Sep 2022 17:44:38 -0400</pubDate>
+    <lastBuildDate>Thu, 15 Sep 2022 17:44:38 -0400</lastBuildDate>
     <generator>Jekyll v4.2.2</generator>
     
       <item>
@@ -247,7 +247,7 @@ Const=\sum_{c_i \in C}p\left(x_i, c_i ; \theta\right)\]
 \mathbf{h}_i^{l+1} &amp;amp;=\phi_h\left(\mathbf{h}_i^l, \mathbf{m}_i\right)
 \end{aligned}\]
 
-&lt;p&gt;这里 $\mathbf{h}&lt;em&gt;i^l \in \mathbb{R}^{nf}$ 是节点 $v_i$ 在 $l$ 层的embedding，$a&lt;/em&gt;{i j}$ 表示边的属性，$\mathcal{N}(i)$ 是 $v_i$ 的邻居节点的集合。&lt;/p&gt;
+&lt;p&gt;这里 $\mathbf{h}_i^l \in \mathbb{R}^{nf}$ 是节点 $v_i$ 在 $l$ 层的embedding，$a_{i j}$ 表示边的属性，$\mathcal{N}(i)$ 是 $v_i$ 的邻居节点的集合。&lt;/p&gt;
 
 &lt;p&gt;本文中提出的Equivariant Graph Convolutional Layer (EGCL)的消息传递过程如下：&lt;/p&gt;
 
