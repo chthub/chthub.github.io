@@ -5,9 +5,85 @@
     <description>every day paper</description>
     <link>http://localhost:4000/</link>
     <atom:link href="http://localhost:4000/feed.xml" rel="self" type="application/rss+xml" />
-    <pubDate>Thu, 15 Sep 2022 15:41:39 -0400</pubDate>
-    <lastBuildDate>Thu, 15 Sep 2022 15:41:39 -0400</lastBuildDate>
+    <pubDate>Thu, 15 Sep 2022 16:22:23 -0400</pubDate>
+    <lastBuildDate>Thu, 15 Sep 2022 16:22:23 -0400</lastBuildDate>
     <generator>Jekyll v4.2.2</generator>
+    
+      <item>
+        <title>Prototypical Networks for Few-shot Learning</title>
+        <description>&lt;p&gt;这篇文章提出了原型网络（prototypical networks）用于小样本的分类问题。&lt;/p&gt;
+
+&lt;p&gt;如下图所示，该模型可以应用到小样本或零样本的学习中。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/chthub/everydaypaper/main/imgs/image-20220913104436205.png&quot; alt=&quot;image-20220913104436205&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;formulation&quot;&gt;Formulation&lt;/h2&gt;
+
+&lt;p&gt;在小样本分类中，我们给定了一个小的有标签的支撑集（support set）$S=\left\lbrace \left(\mathbf{x}_1, y_1\right), \ldots,\left(\mathbf{x}_N, y_N\right)\right\rbrace$，$\mathbf{x}_i\in \mathbb{R}^D$, $y_i\in \lbrace 1,\dots,K\rbrace$是对应的标签。$S_k$表示类别$k$的有标签的样本集合。&lt;/p&gt;
+
+&lt;p&gt;原型网络为每一个类别通过嵌入函数 $f_\phi: \mathbb{R}^D \rightarrow \mathbb{R}^M$计算一个 $M$维的表征 $\mathbf{c}_k \in \mathbb{R}^M$, 也称为原型。这里可学习的参数是 $\phi$，计算方式如下：&lt;/p&gt;
+
+\[\mathbf{c}_k=\frac{1}{\left|S_k\right|} \sum_{\left(\mathbf{x}_i, y_i\right) \in S_k} f_\phi\left(\mathbf{x}_i\right) \tag{1}\]
+
+&lt;p&gt;给定一个距离函数 $d: \mathbb{R}^M \times \mathbb{R}^M \rightarrow[0,+\infty)$，基于查询点和原型之间的距离，原型网络将会输出查询点$\mathbf{x}$在所有类别上的分布：&lt;/p&gt;
+
+\[p_\phi(y=k \mid \mathbf{x})=\frac{\exp \left(-d\left(f_\phi(\mathbf{x}), \mathbf{c}_k\right)\right)}{\sum_{k^{\prime}} \exp \left(-d\left(f_\phi(\mathbf{x}), \mathbf{c}_{k^{\prime}}\right)\right)}\tag{2}\]
+
+&lt;p&gt;损失函数是：&lt;/p&gt;
+
+\[J(\phi)=-\log p_\phi(y=k \mid \mathbf{x})\tag{3}\]
+
+&lt;p&gt;$k$是$\mathbf{x}$的真实类别。&lt;/p&gt;
+
+&lt;h2 id=&quot;伪代码&quot;&gt;伪代码&lt;/h2&gt;
+
+&lt;p&gt;伪代码里面的损失函数就是把上面的损失函数代入，展开之后的结果。直观理解有个距离项，让查询点$\mathbf{x}$离其所属类别的原型更近，离其他类别的原型更远。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;https://raw.githubusercontent.com/chthub/everydaypaper/main/imgs/image-20220913101913210.png&quot; alt=&quot;image-20220913101913210&quot; style=&quot;zoom: 50%;&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;regular-bregman-divergences&quot;&gt;regular Bregman divergences&lt;/h2&gt;
+
+&lt;p&gt;这一节讨论了原型网络和regular Bregman divergences之间的关系，还有待于进一步学习。&lt;/p&gt;
+
+&lt;p&gt;此外，余弦距离不属于Bregman divergences，不满足这里的假设，所以在实验中也发现，欧氏距离要优于余弦距离。&lt;/p&gt;
+
+&lt;h2 id=&quot;欧式距离等价于线性模型&quot;&gt;欧式距离等价于线性模型&lt;/h2&gt;
+
+&lt;p&gt;如果取$d\left(\mathbf{z}, \mathbf{z}^{\prime}\right)=\left|\mathbf{z}-\mathbf{z}^{\prime}\right|^2$，那么公式（2）等价于线性模型：&lt;/p&gt;
+
+\[-\left\|f_\phi(\mathbf{x})-\mathbf{c}_k\right\|^2=-f_\phi(\mathbf{x})^{\top} f_\phi(\mathbf{x})+2 \mathbf{c}_k^{\top} f_\phi(\mathbf{x})-\mathbf{c}_k^{\top} \mathbf{c}_k\]
+
+&lt;p&gt;第一项和类别$k$无关，是常数项。所以可以重写为：&lt;/p&gt;
+
+\[2 \mathbf{c}_k^{\top} f_\phi(\mathbf{x})-\mathbf{c}_k^{\top} \mathbf{c}_k=\mathbf{w}_k^{\top} f_\phi(\mathbf{x})+b_k, \text { where } \mathbf{w}_k=2 \mathbf{c}_k \text { and } b_k=-\mathbf{c}_k^{\top} \mathbf{c}_k\]
+
+&lt;p&gt;尽管这里是一个线性函数的形式，但是$f_\phi$可以学到非线性的表征，所以证明了欧氏距离的作用。&lt;/p&gt;
+
+&lt;h2 id=&quot;和匹配网络matching-networks的比较&quot;&gt;和匹配网络（Matching Networks）的比较&lt;/h2&gt;
+
+&lt;p&gt;在one-shot学习中，$\mathbf{c}_k=\mathbf{x}_k$，匹配网络等价于原型网络。&lt;/p&gt;
+
+&lt;p&gt;一个很自然的问题是在每一类中使用多个原型，而不是一个的情况是不是有意义的。这需要一种划分策略，在下面两篇文中有提及。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Distance-based image classification: Generalizing to new classes at near-zero cost&lt;/li&gt;
+  &lt;li&gt;Metric learning with adaptive density discrimination&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;零样本学习&quot;&gt;零样本学习&lt;/h2&gt;
+
+&lt;p&gt;在零样本学习中，没有支撑集，对于每一类只有一个类的元数据向量$\mathbf{v}_k$。为了使用原型网络，直接定义$\mathbf{c}_k = g_{\vartheta}\left(\mathbf{v}_k\right)$。&lt;/p&gt;
+</description>
+        <pubDate>Mon, 12 Sep 2022 08:00:00 -0400</pubDate>
+        <link>http://localhost:4000/2022/09/12/prototypicalnetwork/</link>
+        <guid isPermaLink="true">http://localhost:4000/2022/09/12/prototypicalnetwork/</guid>
+        
+        <category>小样本学习</category>
+        
+        <category>度量学习</category>
+        
+        
+      </item>
     
       <item>
         <title>Prototypical Contrastive Learning of unsupervised representations</title>

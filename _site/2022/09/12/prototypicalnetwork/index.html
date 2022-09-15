@@ -12,17 +12,28 @@
 
     <!-- Open Graph -->
     <meta property="og:title"
-        content="About - Everyday Paper">
+        content="Prototypical Networks for Few-shot Learning - Everyday Paper">
     
-    <meta property="og:type" content="website">
-    <meta property="og:description"
-        content="About page">
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="这篇文章提出了原型网络（prototypical networks）用于小样本的分类问题。
+">
+    
+    <meta property="article:published_time" content=" 2022-09-12T08:00:00Z">
+    
+    
+    <meta property="article:author" content="Chthub">
+    
+    
+    <meta property="article:tag" content="小样本学习">
+    
+    <meta property="article:tag" content="度量学习">
+    
     
     <meta property="og:image" content="http://localhost:4000https://avatars.akamai.steamstatic.com/9945406f240ea1a932bb64e71240e7cc0188d0c6_full.jpg">
-    <meta property="og:url" content="http://localhost:4000/about/">
+    <meta property="og:url" content="http://localhost:4000/2022/09/12/prototypicalnetwork/">
     <meta property="og:site_name" content="Everyday Paper">
 
-    <title>About - Everyday Paper</title>
+    <title>Prototypical Networks for Few-shot Learning - Everyday Paper</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -31,7 +42,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/about/">
+    <link rel="canonical" href="http://localhost:4000/2022/09/12/prototypicalnetwork/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href=" /css/bootstrap.min.css">
@@ -195,117 +206,191 @@
   </div>
 </div>
 
-    <!-- Page Header -->
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/home-bg.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
 
 
 
 <style type="text/css">
     header.intro-header{
         position: relative;
-        background-image: url('/img/bg-me-2022.jpg');
+        background-image: url('/img/home-bg.jpg');
         background: ;
     }
 
-    
-    header.intro-header .header-mask{
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        background: rgba(0,0,0, 0.3);
-    }
     
 </style>
 
 
 
 
+<header class="intro-header" >
 
-
-
-<header class="intro-header" style="background-image: url('/img/bg-me-2022.jpg')">
-  <div class="header-mask"></div>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        
-        <div class="site-heading">
-        
-          <h1>About</h1>
-          <span class="subheading">About page</span>
+    <div class="header-mask"></div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/archive/?tag=%E5%B0%8F%E6%A0%B7%E6%9C%AC%E5%AD%A6%E4%B9%A0" title="小样本学习">小样本学习</a>
+                        
+                        <a class="tag" href="/archive/?tag=%E5%BA%A6%E9%87%8F%E5%AD%A6%E4%B9%A0" title="度量学习">度量学习</a>
+                        
+                    </div>
+                    <h1>Prototypical Networks for Few-shot Learning</h1>
+                    
+                    <h2 class="subheading">用于小样本学习的原型网络</h2>
+                    <span class="meta">Posted by Chthub on September 12, 2022</span>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </header>
 
 
 
-<!-- Main Content -->
-<div class="container">
-  <div class="row">
-    
-
-    <!-- USE SIDEBAR -->
-    <!-- PostList Container -->
-    <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12
-      col-xs-12 postlist-container">
-                      <!-- Language Selector -->
-                <select class="sel-lang" onchange= "onLanChange(this.options[this.options.selectedIndex].value)">
-                    <option value="0" selected> 中文 | Chinese </option>
-                    <option value="1"> 英文 | English </option>
-                </select>
 
 
 
-<!-- Chinese Version -->
-<div class="zh post-container">
-    
-    <p>中文About</p>
 
-</div>
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
 
-<!-- English Version -->
-<div class="en post-container">
-    
-    <p>English About</p>
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
 
-</div>
+                <!-- Multi-Lingual -->
+                
+
+				<p>这篇文章提出了原型网络（prototypical networks）用于小样本的分类问题。</p>
+
+<p>如下图所示，该模型可以应用到小样本或零样本的学习中。</p>
+
+<p><img src="https://raw.githubusercontent.com/chthub/everydaypaper/main/imgs/image-20220913104436205.png" alt="image-20220913104436205" /></p>
+
+<h2 id="formulation">Formulation</h2>
+
+<p>在小样本分类中，我们给定了一个小的有标签的支撑集（support set）$S=\left\lbrace \left(\mathbf{x}_1, y_1\right), \ldots,\left(\mathbf{x}_N, y_N\right)\right\rbrace$，$\mathbf{x}_i\in \mathbb{R}^D$, $y_i\in \lbrace 1,\dots,K\rbrace$是对应的标签。$S_k$表示类别$k$的有标签的样本集合。</p>
+
+<p>原型网络为每一个类别通过嵌入函数 $f_\phi: \mathbb{R}^D \rightarrow \mathbb{R}^M$计算一个 $M$维的表征 $\mathbf{c}_k \in \mathbb{R}^M$, 也称为原型。这里可学习的参数是 $\phi$，计算方式如下：</p>
+
+\[\mathbf{c}_k=\frac{1}{\left|S_k\right|} \sum_{\left(\mathbf{x}_i, y_i\right) \in S_k} f_\phi\left(\mathbf{x}_i\right) \tag{1}\]
+
+<p>给定一个距离函数 $d: \mathbb{R}^M \times \mathbb{R}^M \rightarrow[0,+\infty)$，基于查询点和原型之间的距离，原型网络将会输出查询点$\mathbf{x}$在所有类别上的分布：</p>
+
+\[p_\phi(y=k \mid \mathbf{x})=\frac{\exp \left(-d\left(f_\phi(\mathbf{x}), \mathbf{c}_k\right)\right)}{\sum_{k^{\prime}} \exp \left(-d\left(f_\phi(\mathbf{x}), \mathbf{c}_{k^{\prime}}\right)\right)}\tag{2}\]
+
+<p>损失函数是：</p>
+
+\[J(\phi)=-\log p_\phi(y=k \mid \mathbf{x})\tag{3}\]
+
+<p>$k$是$\mathbf{x}$的真实类别。</p>
+
+<h2 id="伪代码">伪代码</h2>
+
+<p>伪代码里面的损失函数就是把上面的损失函数代入，展开之后的结果。直观理解有个距离项，让查询点$\mathbf{x}$离其所属类别的原型更近，离其他类别的原型更远。</p>
+
+<p><img src="https://raw.githubusercontent.com/chthub/everydaypaper/main/imgs/image-20220913101913210.png" alt="image-20220913101913210" style="zoom: 50%;" /></p>
+
+<h2 id="regular-bregman-divergences">regular Bregman divergences</h2>
+
+<p>这一节讨论了原型网络和regular Bregman divergences之间的关系，还有待于进一步学习。</p>
+
+<p>此外，余弦距离不属于Bregman divergences，不满足这里的假设，所以在实验中也发现，欧氏距离要优于余弦距离。</p>
+
+<h2 id="欧式距离等价于线性模型">欧式距离等价于线性模型</h2>
+
+<p>如果取$d\left(\mathbf{z}, \mathbf{z}^{\prime}\right)=\left|\mathbf{z}-\mathbf{z}^{\prime}\right|^2$，那么公式（2）等价于线性模型：</p>
+
+\[-\left\|f_\phi(\mathbf{x})-\mathbf{c}_k\right\|^2=-f_\phi(\mathbf{x})^{\top} f_\phi(\mathbf{x})+2 \mathbf{c}_k^{\top} f_\phi(\mathbf{x})-\mathbf{c}_k^{\top} \mathbf{c}_k\]
+
+<p>第一项和类别$k$无关，是常数项。所以可以重写为：</p>
+
+\[2 \mathbf{c}_k^{\top} f_\phi(\mathbf{x})-\mathbf{c}_k^{\top} \mathbf{c}_k=\mathbf{w}_k^{\top} f_\phi(\mathbf{x})+b_k, \text { where } \mathbf{w}_k=2 \mathbf{c}_k \text { and } b_k=-\mathbf{c}_k^{\top} \mathbf{c}_k\]
+
+<p>尽管这里是一个线性函数的形式，但是$f_\phi$可以学到非线性的表征，所以证明了欧氏距离的作用。</p>
+
+<h2 id="和匹配网络matching-networks的比较">和匹配网络（Matching Networks）的比较</h2>
+
+<p>在one-shot学习中，$\mathbf{c}_k=\mathbf{x}_k$，匹配网络等价于原型网络。</p>
+
+<p>一个很自然的问题是在每一类中使用多个原型，而不是一个的情况是不是有意义的。这需要一种划分策略，在下面两篇文中有提及。</p>
+
+<ol>
+  <li>Distance-based image classification: Generalizing to new classes at near-zero cost</li>
+  <li>Metric learning with adaptive density discrimination</li>
+</ol>
+
+<h2 id="零样本学习">零样本学习</h2>
+
+<p>在零样本学习中，没有支撑集，对于每一类只有一个类的元数据向量$\mathbf{v}_k$。为了使用原型网络，直接定义$\mathbf{c}_k = g_{\vartheta}\left(\mathbf{v}_k\right)$。</p>
 
 
+                <hr style="visibility: hidden;">
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2022/09/11/pcl/" data-toggle="tooltip" data-placement="top" title="Prototypical Contrastive Learning of unsupervised representations">
+                        Previous<br>
+                        <span>Prototypical Contrastive Learning of unsupervised representations</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <hr style="visibility: hidden;">
 
-<!-- disqus 评论框 start -->
-<div class="comment">
-    <div id="disqus_thread" class="disqus-thread">
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
 
-    </div>
-</div>
-<!-- disqus 评论框 end -->
+                
+            </div>  
 
-<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
-<script type="text/javascript">
-    /* * * CONFIGURATION VARIABLES * * */
-    var disqus_shortname = "everydaypaper";
-    var disqus_identifier = "everydaypaper//about/";
-    var disqus_url = "http://localhost:4000/about/";
+    <!-- Side Catalog Container -->
+        
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
+        
 
-    (function () {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-    })();
-</script>
-<!-- disqus 公共JS代码 end -->
-
-
-    </div>
     <!-- Sidebar Container -->
-    <div class="col-lg-3 col-lg-offset-0 col-md-3 col-md-offset-0 col-sm-12
-      col-xs-12 sidebar-container">
-      <!-- Featured Tags -->
-      
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
 
 
 <section>
+    
+        <hr class="hidden-sm hidden-xs">
     
     <h5><a href="/archive/">FEATURED TAGS</a></h5>
     <div class="tags">
@@ -323,71 +408,24 @@
 </section>
 
 
-      <!-- Short About -->
-      <section class="visible-md visible-lg">
-  <hr>
-  <h5><a href="/about/">ABOUT ME</a></h5>
-  <div class="short-about">
-    
-    <img src="https://avatars.akamai.steamstatic.com/9945406f240ea1a932bb64e71240e7cc0188d0c6_full.jpg" />
-    
-    
-    <p></p>
-    
-    <!-- SNS Link -->
-    
-
-
-<ul class="list-inline">
-
-
-  
-  
-  
-  
-  
-  
-  <li>
-    <a target="_blank" href="https://github.com/chthub">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-      </span>
-    </a>
-  </li>
-  
-  
-</ul>
-  </div>
-</section>
-
-      <!-- Friends Blog -->
-      
-
-      <!-- Ads -->
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- first shot -->
-<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6487568398225121" data-ad-slot="4814308751"
-     data-ad-format="auto" data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
     </div>
-    
-  </div>
-</div>
+</article>
 
+<!-- add support for mathjax by voleking-->
 
-<!-- Add support for Mathjax by Voleking-->
-<!-- If you want to see formulars well in post preview, Maybe you should add this.-->
-<!-- However, most of the time formulars may not appear in the post preview, you can delete it.-->
-<script type="text/x-mathjax-config">
+  <!-- <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
     TeX: {
       equationNumbers: {
         autoNumber: "AMS"
       }
+    },
+    SVG: {
+      scale: 90
     },
     tex2jax: {
       inlineMath: [ ['$','$'] ],
@@ -397,7 +435,107 @@
   });
 </script>
 <script type="text/javascript"
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+        src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_SVG">
+</script> -->
+<!-- <script>
+  MathJax = {
+    tex:{
+      inlineMath: [['$', '$'], ['\\(', '\\)']],
+    },
+    text2jax:{
+      displayMath: [ ['$$','$$'] ],
+    },
+    packages: ['base', 'newcommand', 'configMacros','amsmath'],
+    
+    svg: {
+      fontCache: 'global'
+    }
+  };
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script> -->
+
+
+<!-- <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script type="text/javascript" id="MathJax-script" async
+  src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js">
+</script> -->
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ['\\(','\\)'] ],
+      processEscapes: true
+    },
+    packages: ['base', 'newcommand', 'configMacros','amsmath'],
+    svg: {
+      fontCache: 'global'
+    },
+    "HTML-CSS": {
+      availableFonts: ["TeX"], //可选字体
+      showMathMenu: false //关闭右击菜单显示
+  }
+
+  });
+</script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML' async></script>
+
+
+
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "everydaypaper";
+    var disqus_identifier = "/2022/09/12/prototypicalnetwork";
+    var disqus_url = "http://localhost:4000/2022/09/12/prototypicalnetwork/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'right',
+          // icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
 
 
 
@@ -524,7 +662,7 @@
     function generateCatalog(selector) {
 
         // interop with multilangual 
-        if ('true' == 'true') {
+        if ('' == 'true') {
             _containerSelector = 'div.post-container.active'
         } else {
             _containerSelector = 'div.post-container'
@@ -581,58 +719,6 @@
 
 
 <!-- Multi-Lingual -->
-
-<!-- Handle Language Change -->
-<script type="text/javascript">
-    // get nodes
-    var $zh = document.querySelector(".zh");
-    var $en = document.querySelector(".en");
-    var $select = document.querySelector("select");
-
-    // Changes at v1.8.1: include lang flag as a url query. This interop well with catalog hash anchors.
-    function getLang() { return new URLSearchParams(document.location.search).get("lang") }
-
-    function setLang(newLang) {
-        var params = new URLSearchParams(document.location.search)
-        params.set("lang", newLang)
-        document.location.search = params.toString()  // refresh.
-    }
-
-    // handle render
-    function _render() {
-        var lang = getLang()
-        // en
-        if (lang == "en") {
-            $select.selectedIndex = 1;
-            $en.style.display = "block";
-            $en.classList.add("active");
-            $zh.style.display = "none";
-            $zh.classList.remove("active");
-            // default to zh-cn
-        } else {
-            $select.selectedIndex = 0;
-            $zh.style.display = "block";
-            $zh.classList.add("active");
-            $en.style.display = "none";
-            $en.classList.remove("active");
-        }
-        // interop with catalog 
-        generateCatalog(".catalog-body");
-    }
-
-    // handle select change
-    function onLanChange(index) {
-        if (index == 0) {
-            lang = "zh"
-        } else {
-            lang = "en"
-        }
-        setLang(lang)
-    }
-
-    // init
-    _render();
-</script>
 
 
 <!-- Simple Jekyll Search -->

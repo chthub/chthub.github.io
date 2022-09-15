@@ -1,6 +1,14 @@
 [
   
     {
+      "title"    : "Prototypical Networks for Few-shot Learning",
+      "subtitle" : "用于小样本学习的原型网络",
+      "tags"     : "小样本学习, 度量学习",
+      "url"      : "/2022/09/12/prototypicalnetwork/",
+      "date"     : "2022-09-12 08:00:00 -0400"
+    } ,
+  
+    {
       "title"    : "Prototypical Contrastive Learning of unsupervised representations",
       "subtitle" : "无监督表征的原型对比学习",
       "tags"     : "对比学习, 度量学习",
