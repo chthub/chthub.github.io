@@ -5,8 +5,8 @@ header-img: img/home-bg.jpg
 email: xyz1594610515@gmail.com
 description: "every day paper"
 keyword: "deep learning, paper"
-url: "https://chthub.github.io/everydaypaper/" # your host, for absolute URL
-baseurl: "https://chthub.github.io/everydaypaper/" # for example, '/blog' if your blog hosted on 'host/blog'
+url: "https://chthub.github.io" # your host, for absolute URL
+baseurl: "" # for example, '/blog' if your blog hosted on 'host/blog'
 
 # Publish posts or collection documents with a future date.
 future: true
