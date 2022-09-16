@@ -1,9 +1,25 @@
 [
   
     {
+      "title"    : "Metric learning with adaptive density discrimination",
+      "subtitle" : "自适应密度判别度量学习",
+      "tags"     : "度量学习, ICLR",
+      "url"      : "/2022/09/15/metriclearning/",
+      "date"     : "2022-09-15 08:00:00 -0400"
+    } ,
+  
+    {
+      "title"    : "数学公式测试",
+      "subtitle" : "",
+      "tags"     : "",
+      "url"      : "/2022/09/15/mathtest/",
+      "date"     : "2022-09-15 08:00:00 -0400"
+    } ,
+  
+    {
       "title"    : "Prototypical Networks for Few-shot Learning",
       "subtitle" : "用于小样本学习的原型网络",
-      "tags"     : "小样本学习, 度量学习",
+      "tags"     : "小样本学习, 度量学习, NeurIPS",
       "url"      : "/2022/09/12/prototypicalnetwork/",
       "date"     : "2022-09-12 08:00:00 -0400"
     } ,
@@ -11,7 +27,7 @@
     {
       "title"    : "Prototypical Contrastive Learning of unsupervised representations",
       "subtitle" : "无监督表征的原型对比学习",
-      "tags"     : "对比学习, 度量学习",
+      "tags"     : "对比学习, 度量学习, ICLR",
       "url"      : "/2022/09/11/pcl/",
       "date"     : "2022-09-11 08:00:00 -0400"
     } ,
@@ -19,7 +35,7 @@
     {
       "title"    : "E(n) Equivariant Graph Neural Networks",
       "subtitle" : "E(n) 等变图神经网络",
-      "tags"     : "等变图神经网络",
+      "tags"     : "等变图神经网络, ICML",
       "url"      : "/2022/09/09/EquivariantGraphNeuralNetworks/",
       "date"     : "2022-09-09 08:00:00 -0400"
     } 

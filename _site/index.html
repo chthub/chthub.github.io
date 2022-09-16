@@ -244,6 +244,68 @@
       col-xs-12 postlist-container">
       
 <div class="post-preview">
+    <a href="/2022/09/15/metriclearning/">
+        <h2 class="post-title">
+            Metric learning with adaptive density discrimination
+        </h2>
+        
+        <h3 class="post-subtitle">
+            自适应密度判别度量学习
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                Published on ICLR 2016
+
+首先作者认为目前的距离度量学习存在两个大问题：
+
+
+  基于类别标签的监督信息使得相同类别的样本靠近，不同类别的样本远离。这既没有考虑到类内的不相似性，也没考虑到类间的相似性。
+  现有的Triplet loss或者contrastive loss仅仅惩罚样本对或者样本的三元组，并没有考虑到contextual信息，即周围的邻居结构。这不但增加...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Chthub on September 15, 2022
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
+    <a href="/2022/09/15/mathtest/">
+        <h2 class="post-title">
+            数学公式测试
+        </h2>
+        
+        <h3 class="post-subtitle">
+            
+        </h3>
+        
+        <div class="post-content-preview">
+            
+                进行数学公式测试，查看渲染结果。
+
+下面都是得要求下划线后面加空格，否则报错。
+
+例一
+下划线渲染不正确：
+
+这里 $\mathbf{h}i^l \in \mathbb{R}^{nf}$ 是节点 $v_i$ 在 $l$ 层的embedding，$a{i j}$ 表示边的属性，$\mathcal{N}(i)$ 是 $v_i$ 的邻居节点的集合。
+
+例二
+大括号转义失败：
+
+$\left{x_i...
+            
+        </div>
+    </a>
+    <p class="post-meta">
+        Posted by Chthub on September 15, 2022
+    </p>
+</div>
+<hr>
+
+<div class="post-preview">
     <a href="/2022/09/12/prototypicalnetwork/">
         <h2 class="post-title">
             Prototypical Networks for Few-shot Learning
@@ -255,7 +317,9 @@
         
         <div class="post-content-preview">
             
-                这篇文章提出了原型网络（prototypical networks）用于小样本的分类问题。
+                Published on NeurIPS 2017
+
+这篇文章提出了原型网络（prototypical networks）用于小样本的分类问题。
 
 如下图所示，该模型可以应用到小样本或零样本的学习中。
 
@@ -263,7 +327,7 @@
 
 Formulation
 
-在小样本分类中，我们给定了一个小的有标签的支撑集（support set）$S=\left\lbrace \left(\mathbf{x}_1, y_1\right), \ldots,\left(\mathbf{x...
+在小样本分类中，我们给定了一个小的有标签的支撑集（support set）$S=\left\lbrace \left(\mathbf{x}_1, y_1\rig...
             
         </div>
     </a>
@@ -285,7 +349,7 @@ Formulation
         
         <div class="post-content-preview">
             
-                ICLR 2021
+                Published on ICLR 2021
 
 这篇文章提出了Prototypical Contrastive Learning （PCL），这是一种无监督的表示学习算法，将对比学习和聚类联系在一起。
 
@@ -293,7 +357,7 @@ Formulation
 
 
   实例之间的判别只利用到了低价的图像之间的差异，而没有考虑到高阶的语义关系
-  只要求正负样本远离，没有考虑到负样本内...
+  只要求正负样...
             
         </div>
     </a>
@@ -315,7 +379,9 @@ Formulation
         
         <div class="post-content-preview">
             
-                这篇文章提出一种对平移，旋转，反射和排列等变的图神经网络 E(n)-Equivariant Graph Neural Networks
+                Published on ICML 2021
+
+这篇文章提出一种对平移，旋转，反射和排列等变的图神经网络 E(n)-Equivariant Graph Neural Networks
 
 Formulation
 
@@ -323,7 +389,7 @@ Formulation
 
 
 
-在这张图里面，对原图（左上角）进行旋转，节点的embedding没有发生变化...
+在这张图里面，对原图（左上角...
             
         </div>
     </a>
@@ -355,10 +421,15 @@ Formulation
         
         
         
-                <a data-sort="0001" 
+                <a data-sort="0002" 
                     href="/archive/?tag=%E5%BA%A6%E9%87%8F%E5%AD%A6%E4%B9%A0"
                     title="度量学习"
-                    rel="2">度量学习</a>
+                    rel="3">度量学习</a>
+        
+                <a data-sort="0003" 
+                    href="/archive/?tag=ICLR"
+                    title="ICLR"
+                    rel="2">ICLR</a>
     </div>
 </section>
 

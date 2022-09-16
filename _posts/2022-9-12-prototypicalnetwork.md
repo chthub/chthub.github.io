@@ -10,7 +10,9 @@ mathjax: true
 tags:
     - 小样本学习
     - 度量学习
+    - NeurIPS
 ---
+Published on NeurIPS 2017
 
 这篇文章提出了原型网络（prototypical networks）用于小样本的分类问题。
 
@@ -20,7 +22,7 @@ tags:
 
 ## Formulation
 
-在小样本分类中，我们给定了一个小的有标签的支撑集（support set）$S=\left\lbrace \left(\mathbf{x}_1, y_1\right), \ldots,\left(\mathbf{x}_N, y_N\right)\right\rbrace$，$\mathbf{x}_i\in \mathbb{R}^D$, $y_i\in \lbrace 1,\dots,K\rbrace$是对应的标签。$S_k$表示类别$k$的有标签的样本集合。
+在小样本分类中，我们给定了一个小的有标签的支撑集（support set）$S=\left\lbrace \left(\mathbf{x}_1, y_1\right), \ldots,\left(\mathbf{x}_N, y_N\right)\right\rbrace $，$\mathbf{x}_i\in \mathbb{R}^D$, $y_i\in \lbrace 1,\dots,K\rbrace $是对应的标签。$S_k$表示类别$k$的有标签的样本集合。
 
 原型网络为每一个类别通过嵌入函数 $f_\phi: \mathbb{R}^D \rightarrow \mathbb{R}^M$计算一个 $M$维的表征 $\mathbf{c}_k \in \mathbb{R}^M$, 也称为原型。这里可学习的参数是 $\phi$，计算方式如下：
 
@@ -81,4 +83,4 @@ $$
 
 ## 零样本学习
 
-在零样本学习中，没有支撑集，对于每一类只有一个类的元数据向量$\mathbf{v}_k$。为了使用原型网络，直接定义$\mathbf{c}_k = g\_{\vartheta}\left(\mathbf{v}_k\right)$。
+在零样本学习中，没有支撑集，对于每一类只有一个类的元数据向量$\mathbf{v}_k$。为了使用原型网络，直接定义$\mathbf{c}_k=g_{\vartheta}\left(\mathbf{v}_k\right)$。

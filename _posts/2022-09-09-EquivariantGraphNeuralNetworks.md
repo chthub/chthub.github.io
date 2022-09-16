@@ -9,7 +9,9 @@ catalog: true
 mathjax: true
 tags:
     - 等变图神经网络
+    - ICML
 ---
+Published on ICML 2021
 
 这篇文章提出一种对平移，旋转，反射和排列等变的图神经网络 E(n)-Equivariant Graph Neural Networks
 
@@ -31,7 +33,7 @@ $$
 \end{aligned}
 $$
 
-这里 $\mathbf{h}\_i^l \in \mathbb{R}^{nf}$ 是节点 $v_i$ 在 $l$ 层的embedding，$a_{i j}$ 表示边的属性，$\mathcal{N}(i)$ 是 $v_i$ 的邻居节点的集合。
+这里 $\mathbf{h}_ i^l \in \mathbb{R}^{nf}$ 是节点 $v_i$ 在 $l$ 层的embedding，$a_{i j}$ 表示边的属性，$\mathcal{N}(i)$ 是 $v_i$ 的邻居节点的集合。
 
 本文中提出的Equivariant Graph Convolutional Layer (EGCL)的消息传递过程如下：
 
