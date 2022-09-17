@@ -12,13 +12,13 @@
 
     <!-- Open Graph -->
     <meta property="og:title"
-        content="Metric learning with adaptive density discrimination - Everyday Paper">
+        content="Hypergraph-Induced Semantic Tuplet Loss for Deep Metric Learning - Everyday Paper">
     
     <meta property="og:type" content="article">
-    <meta property="og:description" content="Published on ICLR 2016
+    <meta property="og:description" content="Published on CVPR 2022
 ">
     
-    <meta property="article:published_time" content=" 2022-09-15T08:00:00Z">
+    <meta property="article:published_time" content=" 2022-09-17T08:00:00Z">
     
     
     <meta property="article:author" content="Chthub">
@@ -26,14 +26,16 @@
     
     <meta property="article:tag" content="度量学习">
     
-    <meta property="article:tag" content="ICLR">
+    <meta property="article:tag" content="CVPR">
+    
+    <meta property="article:tag" content="超图">
     
     
     <meta property="og:image" content="http://localhost:4000https://avatars.akamai.steamstatic.com/9945406f240ea1a932bb64e71240e7cc0188d0c6_full.jpg">
-    <meta property="og:url" content="http://localhost:4000/2022/09/15/metriclearning/">
+    <meta property="og:url" content="http://localhost:4000/2022/09/17/hyper_metric_learning/">
     <meta property="og:site_name" content="Everyday Paper">
 
-    <title>Metric learning with adaptive density discrimination - Everyday Paper</title>
+    <title>Hypergraph-Induced Semantic Tuplet Loss for Deep Metric Learning - Everyday Paper</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -42,7 +44,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/2022/09/15/metriclearning/">
+    <link rel="canonical" href="http://localhost:4000/2022/09/17/hyper_metric_learning/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href=" /css/bootstrap.min.css">
@@ -239,13 +241,15 @@
                         
                         <a class="tag" href="/archive/?tag=%E5%BA%A6%E9%87%8F%E5%AD%A6%E4%B9%A0" title="度量学习">度量学习</a>
                         
-                        <a class="tag" href="/archive/?tag=ICLR" title="ICLR">ICLR</a>
+                        <a class="tag" href="/archive/?tag=CVPR" title="CVPR">CVPR</a>
+                        
+                        <a class="tag" href="/archive/?tag=%E8%B6%85%E5%9B%BE" title="超图">超图</a>
                         
                     </div>
-                    <h1>Metric learning with adaptive density discrimination</h1>
+                    <h1>Hypergraph-Induced Semantic Tuplet Loss for Deep Metric Learning</h1>
                     
-                    <h2 class="subheading">自适应密度判别度量学习</h2>
-                    <span class="meta">Posted by Chthub on September 15, 2022</span>
+                    <h2 class="subheading">用于深度度量学习的超图诱导的语义元组损失</h2>
+                    <span class="meta">Posted by Chthub on September 17, 2022</span>
                 </div>
             </div>
         </div>
@@ -272,147 +276,103 @@
                 <!-- Multi-Lingual -->
                 
 
-				<p>Published on ICLR 2016</p>
+				<p>Published on CVPR 2022</p>
 
-<p>首先作者认为目前的距离度量学习存在两个大问题：</p>
+<p>作者在这篇文章中主打的一个点是：</p>
+
+<blockquote>
+  <p>relations among samples from the same class and similar-looking samples from different classes, must be helpful for understanding class-discriminative visual semantics, leading to improved feature learning</p>
+</blockquote>
+
+<p>所以要考虑到一个样本同时和不同的类别有联系。比如对于鸟类识别任务来说，这种任务是比较精细的任务，粗略来说都是识别鸟，每个类别之间是有联系的，类别之间可能会有相似的样本。这是一种多边关系（multilateral relations），而超图正好可以建模这种任务。</p>
+
+<p><img src="https://raw.githubusercontent.com/chthub/chthub.github.io/main/imgs/image-20220917154436171.png" alt="image-20220917154436171" style="zoom:50%;" /></p>
+
+<h2 id="相关工作">相关工作</h2>
+
+<p>目前已有的度量学习损失函数一种有4类：</p>
 
 <ol>
-  <li>基于类别标签的监督信息使得相同类别的样本靠近，不同类别的样本远离。这既没有考虑到类内的不相似性，也没考虑到类间的相似性。</li>
-  <li>现有的Triplet loss或者contrastive loss仅仅惩罚样本对或者样本的三元组，并没有考虑到contextual信息，即周围的邻居结构。这不但增加了计算的复杂度，而且增大了收敛的难度。</li>
+  <li>Pair-based losses</li>
+  <li>Proxy-based losses</li>
+  <li>Classification-based losses</li>
+  <li>Graph-based losses</li>
 </ol>
 
-<p><img src="https://raw.githubusercontent.com/chthub/chthub.github.io/main/imgs/image-20220915233113147.png" alt="image-20220915233113147" style="zoom:50%;" /></p>
-
-<p>所以理想的DML算法应该是这样的：</p>
-
-<ol>
-  <li>追求局部的分离，而不是全局的分离。</li>
-  <li>分离表征空间中不同类别的分布</li>
-</ol>
-
-<p>所以DML算法要发现不同类别之间的重叠部分，并减少惩罚这种重叠以获得判别。</p>
-
-<p>所以，需要有聚类算法建模样本的分布。这样可以从直接优化样本转变成优化类簇。同时，基于聚类的算法也降低了负采样的成本，只需要两步，首先先找到相邻的簇，然后再从簇中采样即可。</p>
+<p>这里每一类的相关工作还需要进一步看论文，先在这挖个坑。</p>
 
 <h2 id="formulation">Formulation</h2>
 
-<p>假设现在有数据集包含 $N$ 个输入和标签对 $\mathcal{D}=\left\lbrace \mathbf{x}_n, y_n\right \rbrace _{n=1}^N$ ，标签有 $C$ 类。输入样本$\mathbf{x}_n$的表征向量由映射$\mathbf{f}(\cdot ; \boldsymbol{\Theta})$计算：</p>
+<p>假设现在有$N$张图片$\mathcal{X}=\left\lbrace \mathbf{x}_1, \mathbf{x}_2, \cdots, \mathbf{x}_N\right\rbrace $ ，和对应的标签 $\mathcal{Y}=\left\lbrace y_1, y_2, \cdots, y_N\right\rbrace $，共有$C$类，$y_i \in\lbrace 1,2, \cdots, C\rbrace $。对于输入图片$\mathbf{x}_i$，有编码器$E$将其映射为$\mathbf{z}_i \in \mathbb{R}^D$：</p>
 
-\[\mathbf{r}_n=\mathbf{f}\left(\mathbf{x}_n ; \boldsymbol{\Theta}\right), n=1, \ldots, N\]
+\[\mathbf{z}_i=E\left(\mathbf{x}_i ; \boldsymbol{\Theta}\right)\]
 
-<p>对于一组类别为 $c$ 的样本, 利用K-means算法，将其分成$K$簇 $\mathcal{I}_1^c, \ldots, \mathcal{I}_K^c$，目标是要最小化每一簇内样本和其中心点$\mathbf{\mu}^c_k$的距离：</p>
+<p>本文的目标是训练$E$使其产生有判别力的embedding。在接下来的算法设计里面，我们考虑的是一个由$N_b$个样本和标签组成的mini-batch $\mathcal{B}=\left\lbrace \left(\mathbf{x}_i, y_i\right)\right\rbrace _{i=1}^{N_b}$， $\mathcal{C} \subset\lbrace 1,2, \cdots, C\rbrace $ 表示 mini-batch $\mathcal{B}$ 的标签集合。</p>
 
-\[\begin{aligned}
-\mathcal{I}_1^c, \ldots, \mathcal{I}_K^c &amp;=\arg \min _{I_1^c, \ldots, I_K^c} \sum_{k=1}^K \sum_{\mathbf{r} \in I_k^c}\left\|\mathbf{r}-\boldsymbol{\mu}_k^c\right\|_2^2 \\
-\boldsymbol{\mu}_k^c &amp;=\frac{1}{\left|I_k^c\right|} \sum_{\mathbf{r} \in I_k^c} \mathbf{r}
-\end{aligned}\]
+<p>然后我们定义原型分布（prototypical distributions），$\mathbb{D}=\left\lbrace \mathcal{D}_1, \mathcal{D}_2, \cdots, \mathcal{D}_C\right\rbrace $表示一组可学习的分布，共有$C$个，我们希望它能建模真实的特征分布。每一类的分布$\mathcal{D}_c$有两个参数，分别是均值 $\boldsymbol{\mu}_c \in \mathbb{R}^D$ 和协方差 $\mathbf{Q}_c \in \mathbb{R}^{D \times D}$, 分别表示类簇中心和类内的variations。为了计算上的简化，这里的$\mathbf{Q}_c$是对角矩阵，对角元是$\mathbf{q}_c\in \mathbb{R}^D$， $\mathbf{Q}_c=\operatorname{diag}\left(\mathbf{q}_c\right)$. 因此 $\mathbb{D}$ 中的所有参数可以表示为 $\boldsymbol{\Phi}=\left\lbrace \left(\boldsymbol{\mu}_c, \mathbf{q}_c\right)\right\rbrace _{c=1}^C$。</p>
 
-<p>定义 $C(\mathbf{r})$ 为表征 $\mathbf{r}$ 的类别标签,  $\boldsymbol{\mu}(\mathbf{r})$ 是其对应的簇心。 则目标函数（Magnet loss）定义如下：</p>
+<p>然后可以定义分布损失$\mathcal{L}_D$。首先利用平方Mahalanobis距离计算样本$\mathbf{z}_i$和分布$\mathcal{D}_c$之间的距离：</p>
 
-\[\mathscr{L}(\boldsymbol{\Theta})=\frac{1}{N} \sum_{n=1}^N\left\{-\log \frac{e^{-\frac{1}{2 \sigma^2}\left\|\mathbf{r}_n-\boldsymbol{\mu}\left(\mathbf{r}_n\right)\right\|_2^2-\alpha}}{\sum_{c \neq C\left(\mathbf{r}_n\right)} \sum_{k=1}^K e^{-\frac{1}{2 \sigma^2}\left\|\mathbf{r}_n-\boldsymbol{\mu}_k^c\right\|_2^2}}\right\}_{+}\tag{1}\]
+\[d_m^2\left(\mathbf{z}_i, \mathcal{D}_c\right)=\left(\mathbf{z}_i-\boldsymbol{\mu}_c\right)^{\top} \mathbf{Q}_c^{-1}\left(\mathbf{z}_i-\boldsymbol{\mu}_c\right)\]
 
-<p>这里$\lbrace\cdot\rbrace_+$表示hinge函数。$\alpha \in \mathbb{R}$，$\sigma^2=\frac{1}{N-1} \sum_{\mathbf{r} \in \mathcal{D}}|\mathbf{r}-\boldsymbol{\mu}(\mathbf{r})|_2^2$表示样本距离其中心的方差。</p>
+<p>基于此，可以定义$\mathbf{z}_ i$在其正确的原型分布$\mathcal{D}_+$上的概率：</p>
 
-<p>直观理解，在分子项，这个目标函数要最小化$\mathbf{r}_n$和$\boldsymbol{\mu}\left(\mathbf{r}_n\right)$之间的距离。对于分母项，该目标函数要最大化$\mathbf{r}_n$和标签与$\mathbf{r}_n$不相同的其他簇心的距离。此外对于分母项来说，和$\mathbf{r}_n$距离较远的簇之间的计算项接近0，可以忽略，所以在实际的计算过程中可以只计算局部邻居就行。这就引出了下文要提到的邻居采样过程。</p>
+\[P_i=\frac{\exp \left(-\tau d_m^2\left(\mathbf{z}_i, \mathcal{D}_{+}\right)\right)}{\sum_{\mathcal{D}_c \in \mathbb{D}} \exp \left(-\tau d_m^2\left(\mathbf{z}_i, \mathcal{D}_c\right)\right)}\]
 
-<h3 id="效果演示">效果演示</h3>
+<p>所以最终的损失可以写成所有样本的负对数似然的形式：</p>
 
-<p>下图中的白点代表同一个类别里面的不同的簇，这里$K=32$。红箭头表示和那些指出的簇最近的样本。（a）和（b）属于不同类别，但都有动物和人的这一层含义，所虽然属于不同类别，但在空间上更靠近。（b）和（c）属于同一类别Manta，但是（b）表示的是Manta和人，（c）表示的是Manta在深水，所以在空间上距离较远。（c）和（d）属于不同类别，但表示相似的含义（in the deep），所以在空间上距离也更近。可以看到蓝色这一小簇明显是离群了，而这是Triplet和Softmax里面所没有的。</p>
+\[\mathcal{L}_D=\frac{1}{N_b} \sum_{i=1}^{N_b}-\log P_i\]
 
-<p><img src="https://raw.githubusercontent.com/chthub/chthub.github.io/main/imgs/image-20220915225956128.png" alt="image-20220915225956128" /></p>
+<p>我觉得这里有一个独特的地方是原型分布的均值$\boldsymbol{\mu}_c$是直接学出来的，而不是通过求平均值得到的。</p>
 
-<h2 id="训练过程">训练过程</h2>
+<p>随后对于mini-batch $\mathcal{B}$中的每一类$c \in \mathcal{C}$构建一个语义元组（semantic tuplet）$\mathcal{S}(c)$ ，总共有$|\mathcal{C}|$个，基于原型分布$\mathbb{D}$, 语义元组可以表示为矩阵的形式 $\mathbf{S} \in[0,1]^{N_b \times|\mathcal{C}|}$：</p>
 
-<h3 id="邻居采样">邻居采样</h3>
+\[\mathbf{S}_{i j}=\left\lbrace \begin{array}{cc}
+1 &amp; \text { if } y_i=\mathcal{C}_j \\
+e^{-\alpha d_m^2\left(\mathbf{z}_i, \mathcal{D}_{\mathcal{C}_j}\right)} &amp; \text { otherwise }
+\end{array}\right.\]
 
-<p>在训练过程中，minbatch构建于局部邻居，而不是随机的独立采样。过程如下：</p>
+<p>可以看到，当$\boldsymbol{S}_{ij}$不为1时，这可以看作是负样本的惩罚力度，越大说明就要去增加对这个样本的优化力度。此时从超图的角度来说，矩阵$\boldsymbol{S} _{ij}$可以看作是超图上节点和边之间的关系。超图上的一个超边对应于这里的一个语义元组。</p>
 
-<p><img src="https://raw.githubusercontent.com/chthub/chthub.github.io/main/imgs/image-20220915184410116.png" alt="image-20220915184410116" /></p>
+<p>然后作者用超图神经网络（Hypergraph Neural Network，HGNN）在这个构建出来的超图上进行学习，然后做一个节点分类任务。超图第$l+1$层的输出计算如下：</p>
 
-<p>在训练时会保存每个样本的loss，对于某个簇$I$，可以计算这个簇的平均loss，$\mathscr{L}<em>I$。定义$p</em>{\mathcal{I}}(I) \propto \mathscr{L}_I$，即根据簇loss的大小按概率采样。即簇的loss越大，有更高的概率被采样到。基于簇loss进行采样的一个优点是可能经过几次迭代，所有的簇都能彼此分离，因为在这个过程中会优先优化那些loss很高的簇，这提高了计算效率。而如果随机采样的话，可能会导致多次对同一个簇进行优化，这就降低了计算效率。</p>
+\[\mathbf{Z}^{(l+1)}=\sigma\left(\mathbf{D}_v^{-\frac{1}{2}} \mathbf{H D}_e^{-1} \mathbf{H}^{\top} \mathbf{D}_v^{-\frac{1}{2}} \mathbf{Z}^{(l)} \mathbf{\Psi}^{(l)}\right)\]
 
-<p>impostor clusters直译是冒名顶替的簇，其实就是指周围的簇。$P_{I_m}(\cdot)$是均匀分布，即簇内的样本是均匀采样的。感觉这里采样簇内样本的设计还有改进的空间。</p>
+<p>$\boldsymbol{\Psi}^{(l)} \in \mathbb{R}^{d_l \times d_{l+1}}$ 表示网络权重，$\boldsymbol{H}$便是这里的$\boldsymbol{S}$，$\mathbf{D}_v$和$\mathbf{D}_e$分别是节点和边的度矩阵。最后一层的输出经过softmax函数得到类别概率，随后计算和真实标签的交叉熵：</p>
 
-<p>然后基于采样的样本可以计算公式（1）的近似版：</p>
+\[\hat{\mathbf{Y}}=\operatorname{softmax}\left(\mathbf{Z}^{(L)}\right)\\
+\mathcal{L}_{C E}=-\frac{1}{N_b} \sum_{i=1}^{N_b} \sum_{j=1}^C \mathbf{Y}_{i j} \log \hat{\mathbf{Y}}_{i j}\]
 
-\[\hat{\mathscr{L}}(\boldsymbol{\Theta})=\frac{1}{M D} \sum_{m=1}^M \sum_{d=1}^D\left\{-\log \frac{e^{-\frac{1}{2 \hat{\sigma}^2}\left\|\mathbf{r}_d^m-\hat{\boldsymbol{\mu}}_m\right\|_2^2-\alpha}}{\sum_{\hat{\boldsymbol{\mu}}: C(\hat{\boldsymbol{\mu}}) \neq C\left(\mathbf{r}_d^m\right)} e^{-\frac{1}{2 \hat{\sigma}^2}\left\|\mathbf{r}_d^m-\hat{\boldsymbol{\mu}}\right\|_2^2}}\right\}+\tag{2}\\
-\hat{\boldsymbol{\mu}}_m=\frac{1}{D} \sum_{d=1}^D \mathbf{r}_d^m\\
-\hat{\sigma}=\frac{1}{M D-1} \sum_{m=1}^M \sum_{d=1}^D\left\|\mathbf{r}_d^m-\hat{\boldsymbol{\mu}}_m\right\|_2^2\]
+<p>最终模型的损失函数是原型分布的损失和交叉熵损失的加权求和：</p>
 
-<p>下图展示了Triplet loss和本文提出的Magnet loss之间的对比。这里有两点对比：</p>
+\[\mathcal{L}_{\text {hist }}=\mathcal{L}_D+\lambda_s \mathcal{L}_{C E}\]
 
-<ol>
-  <li>Triplet loss每次只计算一个样本的三元组，而Magnet loss每次计算的是一组局部邻居样本形成的簇。三元组的设计提高了计算的复杂度和计算量。</li>
-  <li>Triplet loss定义的是相似度是基于样本的，Magnet loss定义的相似度是基于簇分布的。Triplet loss惩罚的是样本之间的相似性，而Magnet loss惩罚的是簇之间的重叠度，并没有明确要求样本对之间的距离，所以为建模同类样本内部之间的差异性和不同类样本之间相似性打下了基础。而且，对簇的惩罚使得对样本点的调整更加具有一致性，而Triplet loss里面的三元组并不具有样本间的一致性。</li>
-</ol>
+<p>模型的框架图如下：</p>
 
-<p><img src="https://raw.githubusercontent.com/chthub/chthub.github.io/main/imgs/image-20220915185945811.png" alt="image-20220915185945811" /></p>
+<p><img src="https://raw.githubusercontent.com/chthub/chthub.github.io/main/imgs/image-20220917151836893.png" alt="image-20220917151836893" /></p>
 
-<h2 id="评估过程">评估过程</h2>
-
-<p>由于数据本身带有标签，每个簇也都有标签，所以可以根据最后的表征向量和邻近的簇之间的距离判断这个样本的标签，用来评估模型的效果。换句话说，样本$\mathbf{x}_n$的标签是其与最近的$L$个簇（$\mathbf{\mu}_1, \ldots, \mathbf{\mu}_L$）的softmax相似度：</p>
-
-\[c_n^*=\arg \max _{c=1, \ldots, C} \frac{\sum_{\boldsymbol{\mu}_l: C\left(\boldsymbol{\mu}_l\right)=c} e^{-\frac{1}{2 \sigma^2}\left\|\mathbf{r}_n-\boldsymbol{\mu}_l\right\|_2^2}}{\sum_{l=1}^L e^{-\frac{1}{2 \sigma^2}\left\|\mathbf{r}_n-\boldsymbol{\mu}_l\right\|_2^2}}\]
-
-<p>分子是计算样本和类别标签为$c$的所有临近的簇$\mu_l$之间的距离之和。这和$k$-近邻的想法一样。</p>
-
-<h2 id="和现有模型的联系">和现有模型的联系</h2>
-
-<p>当$M=2$，$D=2$时，公式（2）退化成Triplet loss。</p>
-
-<h3 id="neighbourhood-components-analysis">Neighbourhood Components Analysis</h3>
-
-<p>NCA的目标函数如下：</p>
-
-\[\mathscr{L}_{\mathrm{NCA}}(\boldsymbol{\Theta})=\frac{1}{N} \sum_{n=1}^N-\log \frac{\sum_{n^{\prime}: C\left(\mathbf{r}_{n^{\prime}}\right)=C\left(\mathbf{r}_n\right)} e^{-\left\|\mathbf{r}_n-\mathbf{r}_n^{\prime}\right\|_2^2}}{\sum_{n^{\prime}=1}^N e^{-\left\|\mathbf{r}_n-\mathbf{r}_n^{\prime}\right\|_2^2}}\]
-
-<p>可以看到，该目标函数的目的是最小化同一类样本内部的样本点之间的距离。作者指出了该模型的一个问题是缺少一个像本文中的邻居采样过程，计算复杂度较高。</p>
-
-<h3 id="nearest-class-mean">Nearest Class Mean</h3>
-
-<p>这里的均值向量$\boldsymbol{\mu}_c$是固定住的，可以看到$\boldsymbol{\mu}_c$是根据样本的raw embedding计算的。目的是学习变换$\boldsymbol{W}$。</p>
-
-\[\mathscr{L}_{\mathrm{NCM}}(\mathbf{W})=\frac{1}{N} \sum_{n=1}^N-\log \frac{e^{-\left\|\mathbf{W} \mathbf{x}_n-\mathbf{W} \boldsymbol{\mu}_{c\left(\mathbf{x}_n\right)}\right\|_2^2}}{\sum_{c=1}^C e^{-\left\|\mathbf{W} \mathbf{x}_n-\mathbf{W} \boldsymbol{\mu}_c\right\|_2^2}}\\
-\boldsymbol{\mu}_c=\frac{1}{|C|} \sum_{c(\mathbf{x})=c} \mathbf{x},\; c=1, \ldots, C\]
+<p>作者在分析模型框架的合理性时指出，由于超图会使得同一超边里面的样本更加相似，所以为了区分同一超边里面的正样本和误入的负样本，该模型会强迫CNN学习更加有判别性的特征，而不是背景或者噪声信息，这使得学到的特征更具有鲁棒性。</p>
 
 <h2 id="实验">实验</h2>
 
-<p>在实验细节里面，作者提到在开始训练DML算法之前，先用一个部分训练的softmax warm-start DML模型的权重是一件有用的事情。但是不要用完全训练好的模型权重。所以在本文中，先用一个在ImageNet上训练了3轮的网络来初始化编码器的权重。</p>
+<p>在实验部分的激活图挺有意思的：</p>
 
-<h3 id="attribute-distribution">Attribute distribution</h3>
+<p><img src="https://raw.githubusercontent.com/chthub/chthub.github.io/main/imgs/image-20220917152830000.png" alt="image-20220917152830000" style="zoom:50%;" /></p>
 
-<p>在本文中所使用的Magnet可以使不同类别中相似的样本embedding更为接近，同一类别里面不相似的样本距离更远。为了验证这一假设，作者在一个带有属性标签的数据集上进行了实验。如下图（a）所示，除了图片的正常标签外，还有一个attribute 标签，可以看到同一个attrubute标签可以包含不同类别的样本。</p>
+<p>作者讲最后一层卷积层中通道的平均激活值从大到小排序，选出了top-3通道。从结果可以看到，本文提出的HIST使得特征更加集中在目标区域，而且通道有分工，比如那个汽车的图片，有的集中在车前盖，有的集中在车轮，这种通道具有语义信息。其他方法并没有本文的那么显著，有些都集中在背景信息。所以说本文提出的这个方法确实是可以提升模型的特征提取能力，embedding的判别能力，而且更加鲁棒。</p>
 
-<p>然后作者在训练时完全不使用attribute标签，然后通过计算一个样本的周围邻居中和它属性标签相同的所占比例来评估算法有没有学到这种类间的相似性。下图中的（c）里面显示Magnet loss可以学到这种类别间的相似性。同时，还可以注意到，Softmax的效果要好于Triplet loss。这是因为Triplet loss严格定义了样本间要么相似，要么就不相似，所以很难学到不同类样本间的相似性。而Softmax的简单设计则是为样本之间的相似性留出了空间。</p>
-
-<p>下图（b）展示了Magnet 和 softmax loss学习之后的embedding，橘色表示同attribute label的样本。可以看到Magnet可以学到跨类别的相似性。</p>
-
-<p><img src="https://raw.githubusercontent.com/chthub/chthub.github.io/main/imgs/image-20220915223912693.png" alt="image-20220915223912693" /></p>
-
-<h3 id="hierarchy-recovery">Hierarchy recovery</h3>
-
-<p>在这个实验中，作者想看看这个算法能不能学习到类别的层次性，能不能识别出类内的差异性。作者将两个不同类别的样本放在一起，用同一个粗化的标签替代它们原来的标签，想看一下是否能从表征中恢复原来的更精细的标签。实验结果如下。可以看到Softmax又一次好于Triplet。</p>
-
-<p><img src="https://raw.githubusercontent.com/chthub/chthub.github.io/main/imgs/image-20220915225403225.png" alt="image-20220915225403225" style="zoom:50%;" /></p>
 
 
                 <hr style="visibility: hidden;">
                 <ul class="pager">
                     
                     <li class="previous">
-                        <a href="/2022/09/15/mathtest/" data-toggle="tooltip" data-placement="top" title="数学公式测试">
+                        <a href="/2022/09/15/metriclearning/" data-toggle="tooltip" data-placement="top" title="Metric learning with adaptive density discrimination">
                         Previous<br>
-                        <span>数学公式测试</span>
+                        <span>Metric learning with adaptive density discrimination</span>
                         </a>
                     </li>
                     
-                    
-                    <li class="next">
-                        <a href="/2022/09/17/hyper_metric_learning/" data-toggle="tooltip" data-placement="top" title="Hypergraph-Induced Semantic Tuplet Loss for Deep Metric Learning">
-                        Next<br>
-                        <span>Hypergraph-Induced Semantic Tuplet Loss for Deep Metric Learning</span>
-                        </a>
-                    </li>
                     
                 </ul>
                 <hr style="visibility: hidden;">
@@ -519,8 +479,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "everydaypaper";
-    var disqus_identifier = "/2022/09/15/metriclearning";
-    var disqus_url = "http://localhost:4000/2022/09/15/metriclearning/";
+    var disqus_identifier = "/2022/09/17/hyper_metric_learning";
+    var disqus_url = "http://localhost:4000/2022/09/17/hyper_metric_learning/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
