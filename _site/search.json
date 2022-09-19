@@ -1,6 +1,14 @@
 [
   
     {
+      "title"    : "Multi-level Distance Regularization for Deep Metric Learning",
+      "subtitle" : "用于深度度量学习的多层距离正则化",
+      "tags"     : "度量学习, AAAI",
+      "url"      : "/2022/09/19/multilevel-distance/",
+      "date"     : "2022-09-19 08:00:00 -0400"
+    } ,
+  
+    {
       "title"    : "Hypergraph-Induced Semantic Tuplet Loss for Deep Metric Learning",
       "subtitle" : "用于深度度量学习的超图诱导的语义元组损失",
       "tags"     : "度量学习, CVPR, 超图",

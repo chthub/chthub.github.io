@@ -12,17 +12,28 @@
 
     <!-- Open Graph -->
     <meta property="og:title"
-        content="Everyday Paper">
+        content="Multi-level Distance Regularization for Deep Metric Learning - Everyday Paper">
     
-    <meta property="og:type" content="website">
-    <meta property="og:description"
-        content="「多读点论文，总是好的」">
+    <meta property="og:type" content="article">
+    <meta property="og:description" content="Published on AAAI 2021
+">
+    
+    <meta property="article:published_time" content=" 2022-09-19T08:00:00Z">
+    
+    
+    <meta property="article:author" content="Chthub">
+    
+    
+    <meta property="article:tag" content="度量学习">
+    
+    <meta property="article:tag" content="AAAI">
+    
     
     <meta property="og:image" content="http://localhost:4000https://avatars.akamai.steamstatic.com/9945406f240ea1a932bb64e71240e7cc0188d0c6_full.jpg">
-    <meta property="og:url" content="http://localhost:4000/">
+    <meta property="og:url" content="http://localhost:4000/2022/09/19/multilevel-distance/">
     <meta property="og:site_name" content="Everyday Paper">
 
-    <title>Everyday Paper</title>
+    <title>Multi-level Distance Regularization for Deep Metric Learning - Everyday Paper</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -31,7 +42,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/">
+    <link rel="canonical" href="http://localhost:4000/2022/09/19/multilevel-distance/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href=" /css/bootstrap.min.css">
@@ -195,7 +206,11 @@
   </div>
 </div>
 
-    <!-- Page Header -->
+    <!-- Image to hack wechat -->
+<!-- <img src="/img/icon_wechat.png" width="0" height="0"> -->
+<!-- <img src="/img/home-bg.jpg" width="0" height="0"> -->
+
+<!-- Post Header -->
 
 
 
@@ -212,257 +227,197 @@
 
 
 
+<header class="intro-header" >
 
-
-
-<header class="intro-header" style="background-image: url('/img/home-bg.jpg')">
-  <div class="header-mask"></div>
-  <div class="container">
-    <div class="row">
-      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
-        
-        <div class="site-heading">
-        
-          <h1>Everyday Paper</h1>
-          <span class="subheading">「多读点论文，总是好的」</span>
+    <div class="header-mask"></div>
+    
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                <div class="post-heading">
+                    <div class="tags">
+                        
+                        <a class="tag" href="/archive/?tag=%E5%BA%A6%E9%87%8F%E5%AD%A6%E4%B9%A0" title="度量学习">度量学习</a>
+                        
+                        <a class="tag" href="/archive/?tag=AAAI" title="AAAI">AAAI</a>
+                        
+                    </div>
+                    <h1>Multi-level Distance Regularization for Deep Metric Learning</h1>
+                    
+                    <h2 class="subheading">用于深度度量学习的多层距离正则化</h2>
+                    <span class="meta">Posted by Chthub on September 19, 2022</span>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </header>
 
 
 
-<!-- Main Content -->
-<div class="container">
-  <div class="row">
-    
 
-    <!-- USE SIDEBAR -->
-    <!-- PostList Container -->
-    <div class="col-lg-8 col-lg-offset-1 col-md-8 col-md-offset-1 col-sm-12
-      col-xs-12 postlist-container">
-      
-<div class="post-preview">
-    <a href="/2022/09/19/multilevel-distance/">
-        <h2 class="post-title">
-            Multi-level Distance Regularization for Deep Metric Learning
-        </h2>
+
+
+
+<!-- Post Content -->
+<article>
+    <div class="container">
+        <div class="row">
+
+    <!-- Post Container -->
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                post-container">
+
+                <!-- Multi-Lingual -->
+                
+
+				<p>Published on AAAI 2021</p>
+
+<p>本文提出了一种用于深度度量学习的新的基于距离的正则化方法，称为Multi-level Distance Regularization (MDR)。它能够让表征空间中向量之间的距离归属于不同的level，以表示样本对之间不同程度的相似性。在训练过程中，这种多层级的设计能够阻止样本被忽视（因为样本太简单了）或者被过度注意（因为样本太难了），这使得参数的优化过程更加平稳，同时提升了模型的泛化能力。</p>
+
+<p>下图是本文的损失和Triplet loss的对比：</p>
+
+<p><img src="https://raw.githubusercontent.com/chthub/chthub.github.io/main/imgs/image-20220919100848434.png" alt="image-20220919100848434" style="zoom:50%;" /></p>
+
+<h2 id="formulation">Formulation</h2>
+
+<p>本文提出的Multi-level Distance Regularization（MDR）可以分成3步。</p>
+
+<h3 id="1-distance-normalization">1. Distance Normalization</h3>
+
+<p>对于输入图片$x$，编码网络 $f$ 将其映射为表征向量 $e$：</p>
+
+\[e=f(x)\]
+
+<p>可以基于欧式距离定义两个表征向量之间的距离：</p>
+
+\[d\left(e_i, e_j\right)=\left\|e_i-e_j\right\|_2\]
+
+<p>然后对距离进行标准化：</p>
+
+\[\bar{d}\left(e_i, e_j\right)=\frac{d\left(e_i, e_j\right)-\mu}{\sigma}\]
+
+<p>基于样本对的集合$\mathcal{P}=\left\lbrace\left(e_i, e_j\right) \mid i \neq j\right\rbrace$ ，$\mu$是距离的均值，$\sigma$是距离的标准差。为了考虑到整个数据集，均值和标准差的更新可以采用动量更新的方式：</p>
+
+\[\begin{aligned}
+\mu_t^* &amp;=\gamma \mu_{t-1}^*+(1-\gamma) \mu \\
+\sigma_t^* &amp;=\gamma \sigma_{t-1}^*+(1-\gamma) \sigma
+\end{aligned}\]
+
+<p>此时标准化之后的距离可以写成：</p>
+
+\[\bar{d}\left(e_i, e_j\right)=\frac{d\left(e_i, e_j\right)-\mu^*}{\sigma^*} .\]
+
+<h3 id="2-level-assignment">2. Level Assignment</h3>
+
+<p>MDR将不同的level作为标准化之后的距离的正则化目标。预先定义一个level的集合$s\in\mathcal{S}$，集合里面的level值初始化为预先定义的数值，比如$\mathcal{S}=\lbrace-3,0,3\rbrace$。每个level $s$可以理解成对距离标准差的乘数。$g(d;s)$是一个指示函数，用来判断是否某个距离 $d$ 与给定的level $s$ 是最近的：</p>
+
+\[g(d, s)= \begin{cases}1, &amp; \text { if } \arg \min _{s_i \in \mathcal{S}}\left|d-s_i\right| \text { is } s \\ 0, &amp; \text { otherwise }\end{cases}\]
+
+<h3 id="3-regularization">3. Regularization</h3>
+
+<p>最终的损失函数定义如下：</p>
+
+\[\mathcal{L}_{\mathrm{MDR}}=\frac{1}{\mathcal{P}} \sum_{\left(e_i, e_j\right) \in \mathcal{P}} \sum_{s \in \mathcal{S}} g\left(\bar{d}\left(e_i, e_j\right), s\right) \cdot\left|\bar{d}\left(e_i, e_j\right)-s\right| .\]
+
+<p>这里的level $s$ 是可学习的参数，作者在实验中尝试了对level set不同的初始化，发现$\lbrace-3,0,3\rbrace$是一个比较好的初始化。可以看到，这个在计算损失的时候，如果$e_i,e_j$之间的距离不属于某个特定的level，则不计算之间的距离和level之间的损失，计算的是距离最近的level之间的损失。</p>
+
+<p>这个损失函数有两个作用：</p>
+
+<ol>
+  <li>与之间对两个样本之间距离进行优化的方法相比，这种对距离的多层次分配使得优化变得更加复杂，这就防止模型在训练集上产生过拟合。</li>
+  <li>最外边的level阻止了和正样本对之间变得更近，和负样本对之间变得更远。这提升了学习难度，使得训练过程更加平稳，对简单的样本loss下降不会太快，也不会太偏向于困难的样本。</li>
+</ol>
+
+<p>在最终学习时的损失函数可以用任意的深度度量学习函数和本文提出的MDR组合：</p>
+
+\[\mathcal{L}=\mathcal{L}_{\mathrm{DML}}+\lambda \mathcal{L}_{\mathrm{MDR}} .\]
+
+<p>下图是模型的框架图：</p>
+
+<p><img src="https://raw.githubusercontent.com/chthub/chthub.github.io/main/imgs/image-20220919101004894.png" alt="image-20220919101004894" /></p>
+
+<h3 id="embedding-normalization-trick-for-mdr">Embedding Normalization Trick for MDR</h3>
+
+<p>作者提到，$L_2$ norm会扰乱MDR的正则化效果，但是为了对参数进行约束，文章中对$\mathcal{L}_{DML}$进行标准化，即对表征向量除以$\mu$，使得：</p>
+
+\[\mathbb{E}\left[d\left(\frac{e_i}{\mu}, \frac{e_j}{\mu}\right)\right]=1\]
+
+<h2 id="实验">实验</h2>
+
+<p>模型在训练和测试集上的学习曲线如下：</p>
+
+<p><img src="https://raw.githubusercontent.com/chthub/chthub.github.io/main/imgs/image-20220919095812735.png" alt="image-20220919095812735" style="zoom:50%;" /></p>
+
+<p>可以看到除了MDR之外的其他两种方法都在训练集上过拟合了，使得其在测试集上的效果下降。</p>
+
+<p>下面这张图可视化了类中心，可以看到MDR方法学到的类中心间距更均匀，距离更大。</p>
+
+<p><img src="https://raw.githubusercontent.com/chthub/chthub.github.io/main/imgs/image-20220919095952090.png" alt="image-20220919095952090" /></p>
+
+<p>下图是不同level的图片展示：</p>
+
+<p><img src="https://raw.githubusercontent.com/chthub/chthub.github.io/main/imgs/image-20220919100301273.png" alt="image-20220919100301273" /></p>
+
+<p>可以看到正样本对主要分布在level 1和level 2，负样本对主要分布在level 2和level 3。但是也有hard-positive pairs属于level 3，hard-negative pairs属于 level 1。可以看到，在这里的训练过程中，不在是那种binary supervision主导训练，而是level占主导。这就提升了模型的泛化能力。</p>
+
+
+                <hr style="visibility: hidden;">
+                <ul class="pager">
+                    
+                    <li class="previous">
+                        <a href="/2022/09/17/hyper_metric_learning/" data-toggle="tooltip" data-placement="top" title="Hypergraph-Induced Semantic Tuplet Loss for Deep Metric Learning">
+                        Previous<br>
+                        <span>Hypergraph-Induced Semantic Tuplet Loss for Deep Metric Learning</span>
+                        </a>
+                    </li>
+                    
+                    
+                </ul>
+                <hr style="visibility: hidden;">
+
+                
+                <!-- disqus 评论框 start -->
+                <div class="comment">
+                    <div id="disqus_thread" class="disqus-thread"></div>
+                </div>
+                <!-- disqus 评论框 end -->
+                
+
+                
+            </div>  
+
+    <!-- Side Catalog Container -->
         
-        <h3 class="post-subtitle">
-            用于深度度量学习的多层距离正则化
-        </h3>
+            <div class="
+                col-lg-2 col-lg-offset-0
+                visible-lg-block
+                sidebar-container
+                catalog-container">
+                <div class="side-catalog">
+                    <hr class="hidden-sm hidden-xs">
+                    <h5>
+                        <a class="catalog-toggle" href="#">CATALOG</a>
+                    </h5>
+                    <ul class="catalog-body"></ul>
+                </div>
+            </div>
         
-        <div class="post-content-preview">
-            
-                Published on AAAI 2021
 
-本文提出了一种用于深度度量学习的新的基于距离的正则化方法，称为Multi-level Distance Regularization (MDR)。它能够让表征空间中向量之间的距离归属于不同的level，以表示样本对之间不同程度的相似性。在训练过程中，这种多层级的设计能够阻止样本被忽视（因为样本太简单了）或者被过度注意（因为样本太难了），这使得参...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Chthub on September 19, 2022
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2022/09/17/hyper_metric_learning/">
-        <h2 class="post-title">
-            Hypergraph-Induced Semantic Tuplet Loss for Deep Metric Learning
-        </h2>
-        
-        <h3 class="post-subtitle">
-            用于深度度量学习的超图诱导的语义元组损失
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                Published on CVPR 2022
-
-作者在这篇文章中主打的一个点是：
-
-
-  relations among samples from the same class and similar-looking samples from different classes, must be helpful for understanding class-discriminative v...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Chthub on September 17, 2022
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2022/09/15/metriclearning/">
-        <h2 class="post-title">
-            Metric learning with adaptive density discrimination
-        </h2>
-        
-        <h3 class="post-subtitle">
-            自适应密度判别度量学习
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                Published on ICLR 2016
-
-首先作者认为目前的距离度量学习存在两个大问题：
-
-
-  基于类别标签的监督信息使得相同类别的样本靠近，不同类别的样本远离。这既没有考虑到类内的不相似性，也没考虑到类间的相似性。
-  现有的Triplet loss或者contrastive loss仅仅惩罚样本对或者样本的三元组，并没有考虑到contextual信息，即周围的邻居结构。这不但增加...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Chthub on September 15, 2022
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2022/09/15/mathtest/">
-        <h2 class="post-title">
-            数学公式测试
-        </h2>
-        
-        <h3 class="post-subtitle">
-            
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                进行数学公式测试，查看渲染结果。
-
-下面都是得要求下划线后面加空格，否则报错。
-
-例一
-下划线渲染不正确：
-
-这里 $\mathbf{h}i^l \in \mathbb{R}^{nf}$ 是节点 $v_i$ 在 $l$ 层的embedding，$a{i j}$ 表示边的属性，$\mathcal{N}(i)$ 是 $v_i$ 的邻居节点的集合。
-
-例二
-大括号转义失败：
-
-$\left{x_i...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Chthub on September 15, 2022
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2022/09/12/prototypicalnetwork/">
-        <h2 class="post-title">
-            Prototypical Networks for Few-shot Learning
-        </h2>
-        
-        <h3 class="post-subtitle">
-            用于小样本学习的原型网络
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                Published on NeurIPS 2017
-
-这篇文章提出了原型网络（prototypical networks）用于小样本的分类问题。
-
-如下图所示，该模型可以应用到小样本或零样本的学习中。
-
-
-
-Formulation
-
-在小样本分类中，我们给定了一个小的有标签的支撑集（support set）$S=\left\lbrace \left(\mathbf{x}_1, y_1\rig...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Chthub on September 12, 2022
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2022/09/11/pcl/">
-        <h2 class="post-title">
-            Prototypical Contrastive Learning of unsupervised representations
-        </h2>
-        
-        <h3 class="post-subtitle">
-            无监督表征的原型对比学习
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                Published on ICLR 2021
-
-这篇文章提出了Prototypical Contrastive Learning （PCL），这是一种无监督的表示学习算法，将对比学习和聚类联系在一起。
-
-作者认为instance-wise contrastive learning存在两个问题：
-
-
-  实例之间的判别只利用到了低价的图像之间的差异，而没有考虑到高阶的语义关系
-  只要求正负样...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Chthub on September 11, 2022
-    </p>
-</div>
-<hr>
-
-<div class="post-preview">
-    <a href="/2022/09/09/EquivariantGraphNeuralNetworks/">
-        <h2 class="post-title">
-            E(n) Equivariant Graph Neural Networks
-        </h2>
-        
-        <h3 class="post-subtitle">
-            E(n) 等变图神经网络
-        </h3>
-        
-        <div class="post-content-preview">
-            
-                Published on ICML 2021
-
-这篇文章提出一种对平移，旋转，反射和排列等变的图神经网络 E(n)-Equivariant Graph Neural Networks
-
-Formulation
-
-几何等变的图神经网络和一般的图神经网络的区别在于几何等变图神经网络在消息传递的过程中考虑到了空间坐标信息，同时要保持坐标信息对于空间变换的等变性。
-
-
-
-在这张图里面，对原图（左上角...
-            
-        </div>
-    </a>
-    <p class="post-meta">
-        Posted by Chthub on September 9, 2022
-    </p>
-</div>
-<hr>
-
-
-<!-- Pager -->
-
-
-    </div>
     <!-- Sidebar Container -->
-    <div class="col-lg-3 col-lg-offset-0 col-md-3 col-md-offset-0 col-sm-12
-      col-xs-12 sidebar-container">
-      <!-- Featured Tags -->
-      
+            <div class="
+                col-lg-8 col-lg-offset-2
+                col-md-10 col-md-offset-1
+                sidebar-container">
+
+                <!-- Featured Tags -->
+                
 
 
 <section>
+    
+        <hr class="hidden-sm hidden-xs">
     
     <h5><a href="/archive/">FEATURED TAGS</a></h5>
     <div class="tags">
@@ -485,81 +440,92 @@ Formulation
 </section>
 
 
-      <!-- Short About -->
-      <section class="visible-md visible-lg">
-  <hr>
-  <h5><a href="/about/">ABOUT ME</a></h5>
-  <div class="short-about">
-    
-    <img src="https://avatars.akamai.steamstatic.com/9945406f240ea1a932bb64e71240e7cc0188d0c6_full.jpg" />
-    
-    
-    <p></p>
-    
-    <!-- SNS Link -->
-    
-
-
-<ul class="list-inline">
-
-
-  
-  
-  
-  
-  
-  
-  <li>
-    <a target="_blank" href="https://github.com/chthub">
-      <span class="fa-stack fa-lg">
-        <i class="fa fa-circle fa-stack-2x"></i>
-        <i class="fa fa-github fa-stack-1x fa-inverse"></i>
-      </span>
-    </a>
-  </li>
-  
-  
-</ul>
-  </div>
-</section>
-
-      <!-- Friends Blog -->
-      
-
-      <!-- Ads -->
-      <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-<!-- first shot -->
-<ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6487568398225121" data-ad-slot="4814308751"
-     data-ad-format="auto" data-full-width-responsive="true"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script>
-
+                <!-- Friends Blog -->
+                
+            </div>
+        </div>
     </div>
-    
-  </div>
-</div>
+</article>
 
+<!-- add support for mathjax by voleking-->
 
-<!-- Add support for Mathjax by Voleking-->
-<!-- If you want to see formulars well in post preview, Maybe you should add this.-->
-<!-- However, most of the time formulars may not appear in the post preview, you can delete it.-->
-<script type="text/x-mathjax-config">
+  <script type="text/x-mathjax-config">
   MathJax.Hub.Config({
-    TeX: {
-      equationNumbers: {
-        autoNumber: "AMS"
-      }
-    },
     tex2jax: {
-      inlineMath: [ ['$','$'] ],
-      displayMath: [ ['$$','$$'] ],
-      processEscapes: true,
-    }
+      inlineMath: [ ['$','$'], ['\\(','\\)'] ],
+      processEscapes: true
+    },
+    packages: ['base', 'newcommand', 'configMacros','amsmath'],
+    svg: {
+      fontCache: 'global'
+    },
+    "HTML-CSS": {
+      availableFonts: ["TeX"], //可选字体
+      // showMathMenu: false //关闭右击菜单显示
+  }
+
   });
 </script>
-<script type="text/javascript"
-  src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/latest.js?config=TeX-AMS_HTML' async></script>
+
+
+
+
+
+
+
+
+<!-- disqus 公共JS代码 start (一个网页只需插入一次) -->
+<script type="text/javascript">
+    /* * * CONFIGURATION VARIABLES * * */
+    var disqus_shortname = "everydaypaper";
+    var disqus_identifier = "/2022/09/19/multilevel distance";
+    var disqus_url = "http://localhost:4000/2022/09/19/multilevel-distance/";
+
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+<!-- disqus 公共JS代码 end -->
+
+
+
+
+<!-- async load function -->
+<script>
+    function async(u, c) {
+      var d = document, t = 'script',
+          o = d.createElement(t),
+          s = d.getElementsByTagName(t)[0];
+      o.src = u;
+      if (c) { o.addEventListener('load', function (e) { c(null, e); }, false); }
+      s.parentNode.insertBefore(o, s);
+    }
+</script>
+<!-- anchor-js, Doc:http://bryanbraun.github.io/anchorjs/ -->
+<script>
+    async("//cdnjs.cloudflare.com/ajax/libs/anchor-js/1.1.1/anchor.min.js",function(){
+        anchors.options = {
+          visible: 'hover',
+          placement: 'right',
+          // icon: '#'
+        };
+        anchors.add().remove('.intro-header h1').remove('.subheading').remove('.sidebar-container h5');
+    })
+</script>
+<style>
+    /* place left on bigger screen */
+    @media all and (min-width: 800px) {
+        .anchorjs-link{
+            position: absolute;
+            left: -0.75em;
+            font-size: 1.1em;
+            margin-top : -0.1em;
+        }
+    }
+</style>
 
 
 
