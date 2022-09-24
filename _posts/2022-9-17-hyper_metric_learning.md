@@ -10,7 +10,7 @@ mathjax: true
 tags:
     - 度量学习
     - CVPR
-    - 超图
+    - hypergraph
 ---
 
 Published on CVPR 2022
