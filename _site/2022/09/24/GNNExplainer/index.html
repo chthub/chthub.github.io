@@ -12,28 +12,30 @@
 
     <!-- Open Graph -->
     <meta property="og:title"
-        content="E(n) Equivariant Graph Neural Networks - Everyday Paper">
+        content="GNNExplainer: Generating Explanations for Graph Neural Networks - Everyday Paper">
     
     <meta property="og:type" content="article">
-    <meta property="og:description" content="Published on ICML 2021
+    <meta property="og:description" content="Published on NeurIPS 2019
 ">
     
-    <meta property="article:published_time" content=" 2022-09-09T08:00:00Z">
+    <meta property="article:published_time" content=" 2022-09-24T08:00:00Z">
     
     
     <meta property="article:author" content="Chthub">
     
     
-    <meta property="article:tag" content="等变图神经网络">
+    <meta property="article:tag" content="GNN">
     
-    <meta property="article:tag" content="ICML">
+    <meta property="article:tag" content="可解释性">
+    
+    <meta property="article:tag" content="NeurIPS">
     
     
     <meta property="og:image" content="http://localhost:4000https://avatars.akamai.steamstatic.com/9945406f240ea1a932bb64e71240e7cc0188d0c6_full.jpg">
-    <meta property="og:url" content="http://localhost:4000/2022/09/09/EquivariantGraphNeuralNetworks/">
+    <meta property="og:url" content="http://localhost:4000/2022/09/24/GNNExplainer/">
     <meta property="og:site_name" content="Everyday Paper">
 
-    <title>E(n) Equivariant Graph Neural Networks - Everyday Paper</title>
+    <title>GNNExplainer: Generating Explanations for Graph Neural Networks - Everyday Paper</title>
 
     <!-- Web App Manifest -->
     <link rel="manifest" href="/pwa/manifest.json">
@@ -42,7 +44,7 @@
     <link rel="shortcut icon" href="/img/favicon.ico">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="http://localhost:4000/2022/09/09/EquivariantGraphNeuralNetworks/">
+    <link rel="canonical" href="http://localhost:4000/2022/09/24/GNNExplainer/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href=" /css/bootstrap.min.css">
@@ -237,15 +239,17 @@
                 <div class="post-heading">
                     <div class="tags">
                         
-                        <a class="tag" href="/archive/?tag=%E7%AD%89%E5%8F%98%E5%9B%BE%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C" title="等变图神经网络">等变图神经网络</a>
+                        <a class="tag" href="/archive/?tag=GNN" title="GNN">GNN</a>
                         
-                        <a class="tag" href="/archive/?tag=ICML" title="ICML">ICML</a>
+                        <a class="tag" href="/archive/?tag=%E5%8F%AF%E8%A7%A3%E9%87%8A%E6%80%A7" title="可解释性">可解释性</a>
+                        
+                        <a class="tag" href="/archive/?tag=NeurIPS" title="NeurIPS">NeurIPS</a>
                         
                     </div>
-                    <h1>E(n) Equivariant Graph Neural Networks</h1>
+                    <h1>GNNExplainer: Generating Explanations for Graph Neural Networks</h1>
                     
-                    <h2 class="subheading">E(n) 等变图神经网络</h2>
-                    <span class="meta">Posted by Chthub on September 9, 2022</span>
+                    <h2 class="subheading">GNNExplainer: 生成图神经网络的解释</h2>
+                    <span class="meta">Posted by Chthub on September 24, 2022</span>
                 </div>
             </div>
         </div>
@@ -272,108 +276,76 @@
                 <!-- Multi-Lingual -->
                 
 
-				<p>Published on ICML 2021</p>
+				<p>Published on NeurIPS 2019</p>
 
-<p>这篇文章提出一种对平移，旋转，反射和排列等变的图神经网络 E(n)-Equivariant Graph Neural Networks</p>
+<p>本文想要解释GNN的预测结果。如下图所示，对于节点 $v$， 解释$v$的预测结果分成了两部分，一个是解释$v$周围的子图，哪些节点和边对预测结果重要，哪些不重要。一部分是解释节点的特征，哪些维度的特征发挥了作用，哪些没有。</p>
+
+<p>本文基于互信息最大化的框架，学习邻接矩阵和节点特征的mask，实现对预测结果的可解释性。</p>
+
+<p><img src="https://raw.githubusercontent.com/chthub/chthub.github.io/main/imgs/image-20220924101937523.png" alt="image-20220924101937523" /></p>
 
 <h2 id="formulation">Formulation</h2>
 
-<p>几何等变的图神经网络和一般的图神经网络的区别在于几何等变图神经网络在消息传递的过程中考虑到了空间坐标信息，同时要保持坐标信息对于空间变换的等变性。</p>
+<p>首先是一个关键的insight，当预测节点的标签时，GNN基于的是节点周围的邻居信息（文章中称之为computation graph）。即节点$v$的计算图$G_c(v)$告诉了GNN如何生成其embedding $\mathbf{z}$。计算图$G_c(v)$的邻接矩阵是$A_c(v) \in\lbrace 0,1\rbrace^{n \times n}$，节点的特征集合是$X_c(v)=\left\lbrace x_j \mid v_j \in G_c(v)\right\rbrace$。然后可以将GNN $\Phi$基于计算图的计算过程表示为：</p>
 
-<p><img src="https://raw.githubusercontent.com/chthub/everydaypaper/main/imgs/image-20220909134601099.png" alt="image-20220909134601099" style="zoom: 50%;" /></p>
+\[P_{\Phi}\left(Y \mid G_c, X_c\right)\]
 
-<p>在这张图里面，对原图（左上角）进行旋转，节点的embedding没有发生变化，但是坐标的embedding变了。同时分别对原图和旋转之后的图消息传递之后得到的新的坐标的embedding来说，也存在一个等价的旋转变换。所以这里的等变性是一种约束，约束坐标的embedding不能随意改变，坐标的embedding要满足这种空间上的等变性。换句话说，我们希望学到的这种坐标的embedding确实是代表了空间位置信息，而不是其他的含义。此外，对于节点自身的embedding来说，它也能在更新的时候加入空间信息，使得节点的embedding更能具有空间上的唯一性，这一点在后面在自编码器的例子上的核心想法。</p>
+<p>$Y\in \lbrace 1, \ldots, C\rbrace$表示节点的标签。</p>
 
-<p>给定图 $\mathcal{G}=(\mathcal{V}, \mathcal{E})$，节点 $v_i \in \mathcal{V}$，边 $e_{i j} \in \mathcal{E}$，图卷积的消息传递过程如下：</p>
+<p>本文提出的GNNExplainer会对预测$\hat{y}$生成解释$(G_S,X_S^F)$。$G_S$是计算图的子图，$X_S$是对应的节点特征集合，$X_S^F$是节点的特征子集，由$F$进行mask。GNNExplainer可以用于单实例解释和多实例解释的情况。</p>
 
-\[\begin{aligned}
-\mathbf{m}_{i j} &amp;=\phi_e\left(\mathbf{h}_i^l, \mathbf{h}_j^l, a_{i j}\right) \\
-\mathbf{m}_i &amp;=\sum_{j \in \mathcal{N}(i)} \mathbf{m}_{i j} \\
-\mathbf{h}_i^{l+1} &amp;=\phi_h\left(\mathbf{h}_i^l, \mathbf{m}_i\right)
-\end{aligned}\]
+<h3 id="单实例解释">单实例解释</h3>
 
-<p>这里 $\mathbf{h}_ i^l \in \mathbb{R}^{nf}$ 是节点 $v_i$ 在 $l$ 层的embedding，$a_{i j}$ 表示边的属性，$\mathcal{N}(i)$ 是 $v_i$ 的邻居节点的集合。</p>
+<p>给定节点 $v$, 我们的目标是识别对预测结果 $\hat{y}$ 重要的子图 $G_S \subseteq G_c$ 和关联的特征 $X_S=$ $\left\lbrace x_j \mid v_j \in G_S\right\rbrace$。我们使用互信息来建模这种重要性：</p>
 
-<p>本文中提出的Equivariant Graph Convolutional Layer (EGCL)的消息传递过程如下：</p>
+\[\max _{G_S} M I\left(Y,\left(G_S, X_S\right)\right)=H(Y)-H\left(Y \mid G=G_S, X=X_S\right)\]
 
-\[\begin{aligned}
-\mathbf{h}^{l+1}, \mathbf{x}^{l+1}&amp;=\operatorname{EGCL}\left[\mathbf{h}^l, \mathbf{x}^l, \mathcal{E}\right]\\
-\mathbf{m}_{i j} &amp;=\phi_e\left(\mathbf{h}_i^l, \mathbf{h}_j^l,\left\|\mathbf{x}_i^l-\mathbf{x}_j^l\right\|^2, a_{i j}\right) \\
-\mathbf{x}_i^{l+1} &amp;=\mathbf{x}_i^l+C \sum_{j \neq i}\left(\mathbf{x}_i^l-\mathbf{x}_j^l\right) \phi_x\left(\mathbf{m}_{i j}\right),\; C=\frac{1}{|\mathcal{V}|-1} \\
-\mathbf{m}_i &amp;=\sum_{j \neq i} \mathbf{m}_{i j} \\
-\mathbf{h}_i^{l+1} &amp;=\phi_h\left(\mathbf{h}_i^l, \mathbf{m}_i\right)
-\end{aligned}\]
+<p>当GNN训练好之后$\Phi$是固定的，所以第一项为常数。所以最大化互信息等价于最小化条件熵：</p>
 
-<p>这里的$\mathbf{x}_i^l$表示节点$v_i$在$l$层的坐标的embedding。区别在于等变的GNN里面的$\mathbf{m}$引入了坐标信息，这里的坐标的embedding也是在每层都会更新。</p>
+\[H\left(Y \mid G=G_S, X=X_S\right)=-\mathbb{E}_{Y \mid G_S, X_S}\left[\log P_{\Phi}\left(Y \mid G=G_S, X=X_S\right)\right]\]
 
-<p>这里有一个细节是$\mathbf{x}_i^{l+1}$的计算时考虑到了除$v_i$之外的所有其他节点，而不只是$v_i$的邻居。同时$\mathbf{m}$在聚集的时候也是在整个图上聚集而不是局限在邻居节点。</p>
+<p>如果 $G_S \sim \mathcal{G}$ 是随机的图变量，此时：</p>
 
-<p>此外，在消息传递的时候还可以把节点的速度考虑进去，初始速度是$\mathbf{v}_i^{\text{init}}$：</p>
+\[\min _{\mathcal{G}} \mathbb{E}_{G_S \sim \mathcal{G}} H\left(Y \mid G=G_S, X=X_S\right)\]
 
-\[\begin{aligned}
-\mathbf{h}^{l+1}, \mathbf{x}^{l+1}, \mathbf{v}^{l+1}&amp;=\operatorname{EGCL}\left[\mathbf{h}^l, \mathbf{x}^l, \mathbf{v}^{\text {init }}, \mathcal{E}\right]\\
-&amp;\mathbf{v}_i^{l+1}=\phi_v\left(\mathbf{h}_i^l\right) \mathbf{v}_i^{\text {init }}+C \sum_{j \neq i}\left(\mathbf{x}_i^l-\mathbf{x}_j^l\right) \phi_x\left(\mathbf{m}_{i j}\right) \\
-&amp;\mathbf{x}_i^{l+1}=\mathbf{x}_i^l+\mathbf{v}_i^{l+1}
-\end{aligned}\]
+<p>在凸假设下，基于Jensen不等式有如下的上界：</p>
 
-<p>注意到如果$\mathbf{v}_i^{\text{init}}=0$，那么这个式子和前面没有速度项的消息传递一样。</p>
+\[\min _{\mathcal{G}} H\left(Y \mid G=\mathbb{E}_{\mathcal{G}}\left[G_S\right], X=X_S\right)\]
 
-<h2 id="链接预测">链接预测</h2>
+<p>然后这里有一些基于平均场变分近似的讨论，没看懂。</p>
 
-<p>文章中的这个模型可以用来做链接预测任务。如果一开始只提供了一个点云或者一个节点集合，此时如果以全连接的方式表示变，这种方法不能scale到节点数量很多的情况。本文提出了一种同时将消息传递和边的构建结合在一起的方法：</p>
+<p>如果要回答诸如：</p>
 
-\[\mathbf{m}_i=\sum_{j \in \mathcal{N}(i)} \mathbf{m}_{i j}=\sum_{j \neq i} e_{i j} \mathbf{m}_{i j}\\
-e_{i j} \approx \phi_{i n f}\left(\mathbf{m}_{i j}\right),\; \phi_{i n f}: \mathbb{R}^{n f} \rightarrow[0,1]^1\]
+<blockquote>
+  <p>why does the trained model predict a certain class label</p>
 
-<p>$\phi_{i n f}$就是一个带有sigmoid函数的线性层，对连边进行概率估计。</p>
+  <p>or</p>
 
-<h2 id="n-body-system">N-body system</h2>
+  <p>how to make the trained model predict a desired class label</p>
+</blockquote>
 
-<p>给定N个带点粒子，已知初始的电荷量，位置和速度，预测1000个时间戳后的位置。回归问题</p>
+<p>可以利用交叉熵修改损失函数如下：</p>
 
-<h2 id="图自编码器">图自编码器</h2>
+\[\min _M-\sum_{c=1}^C \mathbb{1}[y=c] \log P_{\Phi}\left(Y=y \mid G=A_c \odot \sigma(M), X=X_c\right)\]
 
-<p>图自编码器的解码器计算邻接矩阵出了直接内积恢复之外，还可以这样定义：</p>
+<p>这里的$M$就是mask 矩阵，$\odot$表示逐元素的乘积。</p>
 
-\[\hat{A}_{i j}=g_e\left(\mathbf{z}_i, \mathbf{z}_j\right)=\frac{1}{1+\exp \left(w\left\|\mathbf{z}_i-\mathbf{z}_j\right\|^2+b\right)}\]
+<p>为了学习哪些节点特征对预测 $\hat{y}$ 是重要的，GNNEXPLAINER学习一个特征选择器$F$。这里的$F$是一个mask向量。所以最终的目标函数如下：</p>
 
-<p>直接内积的方式适合图变分自编码器，这种方式对GAE和VGAE都挺合适的。</p>
+\[\max _{G_S, F} M I\left(Y,\left(G_S, F\right)\right)=H(Y)-H\left(Y \mid G=G_S, X=X_S^F\right)\]
 
-<p>然后是一个一般的图神经网络无法处理的一种情况：</p>
-
-<p><img src="https://raw.githubusercontent.com/chthub/everydaypaper/main/imgs/image-20220909142349775.png" alt="image-20220909142349775" style="zoom:50%;" /></p>
-
-<p>对于这种4个节点连接起来的cycle graph，如果每个节点的embedding都是一样的，那么消息传递之后的节点embedding也是一样的，自编码器就无法重构节点之间的连边。</p>
-
-<p>一种解决方法是在节点的embedding里面加入噪声，在这个例子里对每个节点的embedding加入了从$\mathcal{N}(\mathbf{0}, \sigma \mathbf{I})$中采样的随机噪声。这种方法的缺点是引入了额外的噪声分布，使得模型也不得不去学习这个分布。</p>
-
-<p>另一种方法是在节点的embedding里面加入位置信息。(Paper: on the equivalence between positional node embeddings and structural graph representations)</p>
-
-<p>然而在本文中，作者将随机采样的噪声作为位置坐标输入到模型里面，输出的节点embedding用于重构邻接矩阵。</p>
-
-<p>实验结果如下，Noise-GNN就是在embedding里面加了随机噪声的GNN模型，右图是尝试过拟合训练集，pe是指训练集图的稀疏程度：</p>
-
-<p><img src="https://raw.githubusercontent.com/chthub/everydaypaper/main/imgs/image-20220909143644002.png" alt="image-20220909143644002" /></p>
-
-<p>可以看到EGNN的power是比Noise-GNN更强的。</p>
-
-<p>还有一个实验是两个数据集上embedding维度的影响：</p>
-
-<p><img src="https://raw.githubusercontent.com/chthub/everydaypaper/main/imgs/image-20220909144035900.png" alt="image-20220909144035900" /></p>
-
-<p>还是维度越高，结果越好。</p>
 
 
                 <hr style="visibility: hidden;">
                 <ul class="pager">
                     
-                    
-                    <li class="next">
-                        <a href="/2022/09/11/pcl/" data-toggle="tooltip" data-placement="top" title="Prototypical Contrastive Learning of unsupervised representations">
-                        Next<br>
-                        <span>Prototypical Contrastive Learning of unsupervised representations</span>
+                    <li class="previous">
+                        <a href="/2022/09/19/multilevel-distance/" data-toggle="tooltip" data-placement="top" title="Multi-level Distance Regularization for Deep Metric Learning">
+                        Previous<br>
+                        <span>Multi-level Distance Regularization for Deep Metric Learning</span>
                         </a>
                     </li>
+                    
                     
                 </ul>
                 <hr style="visibility: hidden;">
@@ -485,8 +457,8 @@ e_{i j} \approx \phi_{i n f}\left(\mathbf{m}_{i j}\right),\; \phi_{i n f}: \math
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "everydaypaper";
-    var disqus_identifier = "/2022/09/09/EquivariantGraphNeuralNetworks";
-    var disqus_url = "http://localhost:4000/2022/09/09/EquivariantGraphNeuralNetworks/";
+    var disqus_identifier = "/2022/09/24/GNNExplainer";
+    var disqus_url = "http://localhost:4000/2022/09/24/GNNExplainer/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

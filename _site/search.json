@@ -1,6 +1,14 @@
 [
   
     {
+      "title"    : "GNNExplainer: Generating Explanations for Graph Neural Networks",
+      "subtitle" : "GNNExplainer: 生成图神经网络的解释",
+      "tags"     : "GNN, 可解释性, NeurIPS",
+      "url"      : "/2022/09/24/GNNExplainer/",
+      "date"     : "2022-09-24 08:00:00 -0400"
+    } ,
+  
+    {
       "title"    : "Multi-level Distance Regularization for Deep Metric Learning",
       "subtitle" : "用于深度度量学习的多层距离正则化",
       "tags"     : "度量学习, AAAI",
